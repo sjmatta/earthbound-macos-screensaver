@@ -1,0 +1,22 @@
+{
+  "name": "earthbound-screensaver",
+  "version": "1.0.0",
+  "description": "macOS screensaver displaying Earthbound battle backgrounds",
+  "author": "Stephen Matta",
+  "license": "MIT",
+  "keywords": [
+    "earthbound",
+    "mother2",
+    "screensaver",
+    "macos",
+    "snes",
+    "retro"
+  ],
+  "scripts": {
+    "setup": "./setup.sh",
+    "clean": "rm -rf vendor upstream"
+  },
+  "engines": {
+    "node": ">= 24.0.0"
+  }
+}
