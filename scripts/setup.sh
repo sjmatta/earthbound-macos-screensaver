@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
 echo "=== Earthbound Screensaver Setup ==="
 echo ""
 
@@ -17,8 +20,10 @@ fi
 echo "Node.js version: $(node -v)"
 echo ""
 
+cd "$PROJECT_DIR"
+
 # Clean previous builds
-rm -rf upstream vendor
+rm -rf upstream dist
 
 # Clone upstream project
 echo "Cloning Earthbound Battle Backgrounds JS..."
@@ -52,25 +57,30 @@ npm install
 
 echo "Building..."
 npm run build
-
-# Copy built assets
-echo "Copying assets..."
 cd ..
-mkdir -p vendor/assets
-cp upstream/dist/assets/index.js vendor/assets/
-cp upstream/dist/assets/utils.js vendor/assets/
 
-# Clean up upstream source (keep only what we need)
+# Create dist directory and copy assets
+echo "Copying assets..."
+mkdir -p dist/assets
+cp upstream/dist/assets/index.js dist/assets/
+cp upstream/dist/assets/utils.js dist/assets/
+
+# Copy source files to dist
+echo "Copying source files..."
+cp src/index.html dist/
+cp src/screensaver.js dist/
+
+# Clean up upstream source
 rm -rf upstream
 
 echo ""
 echo "=== Setup Complete ==="
 echo ""
-echo "Screensaver file: $(pwd)/screensaver.html"
+echo "Screensaver file: $PROJECT_DIR/dist/index.html"
 echo ""
 echo "To use as macOS screensaver:"
 echo "1. Install WebViewScreenSaver: brew install --cask webviewscreensaver"
 echo "2. Open System Settings > Screen Saver"
 echo "3. Select WebViewScreenSaver"
-echo "4. Set URL to: file://$(pwd)/screensaver.html"
+echo "4. Set URL to: file://$PROJECT_DIR/dist/index.html"
 echo ""

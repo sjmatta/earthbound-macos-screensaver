@@ -13,8 +13,9 @@
     "retro"
   ],
   "scripts": {
-    "setup": "./setup.sh",
-    "clean": "rm -rf vendor upstream"
+    "setup": "./scripts/setup.sh",
+    "build:saver": "./scripts/build-saver.sh",
+    "clean": "rm -rf dist upstream native/build native/EarthboundScreensaver/Resources"
   },
   "engines": {
     "node": ">= 24.0.0"

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Earthbound Battle Backgrounds Screensaver</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="main"></canvas>
+
+    <!-- Minimal stub for History (used by utils.js parseFullscreen) -->
+    <script>
+      window.History = {
+        Adapter: { bind: function() {} },
+        pushState: function() {}
+      };
+    </script>
+
+    <!-- Upstream engine (built from Earthbound-Battle-Backgrounds-JS) -->
+    <script src="./assets/utils.js"></script>
+    <script src="./assets/index.js"></script>
+
+    <!-- Screensaver cycling logic -->
+    <script src="./screensaver.js"></script>
+  </body>
+</html>
