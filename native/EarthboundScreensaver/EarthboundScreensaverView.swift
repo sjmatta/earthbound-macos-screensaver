@@ -13,6 +13,7 @@ private let logger = OSLog(subsystem: "com.sjmatta.earthbound-screensaver", cate
 
 class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
     private var webView: WKWebView!
+    private lazy var sheetController = ConfigureSheetController()
 
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
@@ -59,11 +60,21 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
 
         // Resources are in a subdirectory due to how Xcode copies folder references
         if let htmlURL = bundle.url(forResource: "index", withExtension: "html", subdirectory: "Resources") {
-            os_log("HTML URL: %{public}@", log: logger, type: .info, htmlURL.absoluteString)
+            // Add interval parameter from user preferences
+            let interval = sheetController.interval
+            var urlComponents = URLComponents(url: htmlURL, resolvingAgainstBaseURL: false)!
+            urlComponents.queryItems = [URLQueryItem(name: "interval", value: String(interval))]
+
+            guard let urlWithParams = urlComponents.url else {
+                os_log("ERROR: Could not create URL with parameters", log: logger, type: .error)
+                return
+            }
+
+            os_log("Loading URL: %{public}@ (interval: %{public}d)", log: logger, type: .info, urlWithParams.absoluteString, interval)
+
             // Allow read access to the entire bundle to ensure all resources can load
             let bundleURL = bundle.bundleURL
-            os_log("Allowing read access to: %{public}@", log: logger, type: .info, bundleURL.absoluteString)
-            webView.loadFileURL(htmlURL, allowingReadAccessTo: bundleURL)
+            webView.loadFileURL(urlWithParams, allowingReadAccessTo: bundleURL)
         } else {
             os_log("ERROR: Could not find index.html in Resources", log: logger, type: .error)
         }
@@ -82,9 +93,12 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
         os_log("WebView provisional navigation failed: %{public}@", log: logger, type: .error, error.localizedDescription)
     }
 
-    // No configuration sheet
-    override var hasConfigureSheet: Bool { false }
-    override var configureSheet: NSWindow? { nil }
+    // Configuration sheet
+    override var hasConfigureSheet: Bool { true }
+
+    override var configureSheet: NSWindow? {
+        return sheetController.createConfigureSheet()
+    }
 
     // Capture input to prevent web view from handling it
     override func hitTest(_ point: NSPoint) -> NSView? {
