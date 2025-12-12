@@ -8,11 +8,11 @@
  *   ?interval=30  - Cycle every 30 seconds (default: 60)
  */
 
-// Import upstream modules
-import Rom from '../upstream/src/rom/rom'
-import backgroundData from '../upstream/data/truncated_backgrounds.dat?uint8array&base64'
-import Engine from '../upstream/src/engine'
-import BackgroundLayer from '../upstream/src/rom/background_layer'
+// Import upstream modules (from npm git dependency)
+import Rom from 'earthbound-battle-backgrounds/src/rom/rom'
+import backgroundData from 'earthbound-battle-backgrounds/data/truncated_backgrounds.dat?uint8array&base64'
+import Engine from 'earthbound-battle-backgrounds/src/engine'
+import BackgroundLayer from 'earthbound-battle-backgrounds/src/rom/background_layer'
 
 // Constants
 const LAYER_COUNT = 327

@@ -36,24 +36,20 @@ tasks:
     cmds:
       - echo "=== Earthbound Screensaver Setup ==="
       - echo "Node.js version:" $(node -v)
-      - rm -rf upstream dist
-      - echo "Cloning Earthbound Battle Backgrounds JS..."
-      - git clone --depth 1 https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS.git upstream
-      - echo "Installing upstream dependencies..."
-      - cd upstream && npm install
-      - echo "Installing project dependencies..."
+      - rm -rf dist
+      - echo "Installing dependencies..."
       - npm install
       - echo "Building with Vite (bundling all modules)..."
       - npm run build:vite
       - echo "Copying HTML..."
       - cp src/index.html dist/
-      - rm -rf upstream
       - echo ""
       - echo "=== Setup Complete ==="
       - echo "Web assets built in dist/"
     sources:
       - src/**/*
       - vite.config.js
+      - package.json
     generates:
       - dist/index.html
       - dist/screensaver.js
@@ -223,7 +219,6 @@ tasks:
     cmds:
       - echo "Cleaning build artifacts..."
       - rm -rf dist
-      - rm -rf upstream
       - rm -rf native/build
       - rm -rf native/{{.SAVER_NAME}}/Resources
       - rm -rf node_modules

@@ -14,10 +14,5 @@ export default defineConfig({
         entryFileNames: 'screensaver.js',
       }
     }
-  },
-  resolve: {
-    alias: {
-      '@upstream': './upstream/src'
-    }
   }
 })
