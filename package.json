@@ -13,9 +13,10 @@
     "retro"
   ],
   "scripts": {
-    "setup": "./scripts/setup.sh",
-    "build:saver": "./scripts/build-saver.sh",
-    "clean": "rm -rf dist upstream native/build native/EarthboundScreensaver/Resources"
+    "setup": "task setup",
+    "build": "task build",
+    "install": "task install",
+    "clean": "task clean"
   },
   "engines": {
     "node": ">= 24.0.0"

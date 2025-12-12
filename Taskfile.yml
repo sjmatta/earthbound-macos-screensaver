@@ -1,0 +1,308 @@
+# Earthbound Screensaver - Taskfile
+# https://taskfile.dev
+#
+# Usage:
+#   task setup      - Build web assets from upstream
+#   task build      - Build native .saver bundle
+#   task install    - Install screensaver to ~/Library/Screen Savers
+#   task run        - Launch screensaver for testing
+#   task logs       - Stream screensaver logs
+#   task clean      - Remove all build artifacts
+
+version: '3'
+
+vars:
+  SAVER_NAME: EarthboundScreensaver
+  BUNDLE_ID: com.sjmatta.earthbound-screensaver
+  INSTALL_DIR:
+    sh: echo "$HOME/Library/Screen Savers"
+  NODE_MIN_VERSION: "24"
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  # =============================================================================
+  # Setup & Build
+  # =============================================================================
+
+  setup:
+    desc: Build web assets from upstream Earthbound Battle Backgrounds JS
+    preconditions:
+      - sh: command -v node
+        msg: "Node.js is required. Install with: nvm install {{.NODE_MIN_VERSION}}"
+    cmds:
+      - echo "=== Earthbound Screensaver Setup ==="
+      - echo "Node.js version:" $(node -v)
+      - rm -rf upstream dist
+      - echo "Cloning Earthbound Battle Backgrounds JS..."
+      - git clone --depth 1 https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS.git upstream
+      - echo "Patching Vite config for offline use..."
+      - task: write-vite-config
+      - echo "Installing upstream dependencies..."
+      - cd upstream && npm install
+      - echo "Building upstream..."
+      - cd upstream && npm run build
+      - echo "Copying assets..."
+      - mkdir -p dist/assets
+      - cp upstream/dist/assets/index.js dist/assets/
+      - cp upstream/dist/assets/utils.js dist/assets/
+      - cp src/index.html dist/
+      - cp src/screensaver.js dist/
+      - rm -rf upstream
+      - echo ""
+      - echo "=== Setup Complete ==="
+      - echo "Web assets built in dist/"
+    sources:
+      - src/**/*
+    generates:
+      - dist/index.html
+      - dist/screensaver.js
+      - dist/assets/index.js
+      - dist/assets/utils.js
+
+  write-vite-config:
+    internal: true
+    cmds:
+      - |
+        cat > upstream/vite.config.js << 'VITECONFIG'
+        import { defineConfig } from 'vite'
+        import arraybuffer from 'vite-plugin-arraybuffer'
+
+        export default defineConfig({
+          base: './',
+          plugins: [arraybuffer()],
+          build: {
+            rollupOptions: {
+              output: {
+                format: 'iife',
+                inlineDynamicImports: true,
+                entryFileNames: 'assets/[name].js',
+              }
+            }
+          }
+        })
+        VITECONFIG
+
+  build:
+    desc: Build native .saver bundle (runs setup if needed)
+    deps: [ensure-web-assets]
+    preconditions:
+      - sh: command -v xcodebuild
+        msg: "Xcode is required. Install from App Store or run: xcode-select --install"
+    cmds:
+      - echo "=== Building {{.SAVER_NAME}}.saver ==="
+      - echo "Copying web assets to native bundle..."
+      - rm -rf native/{{.SAVER_NAME}}/Resources
+      - mkdir -p native/{{.SAVER_NAME}}/Resources/assets
+      - cp dist/index.html native/{{.SAVER_NAME}}/Resources/
+      - cp dist/screensaver.js native/{{.SAVER_NAME}}/Resources/
+      - cp dist/assets/index.js native/{{.SAVER_NAME}}/Resources/assets/
+      - cp dist/assets/utils.js native/{{.SAVER_NAME}}/Resources/assets/
+      - echo "Building native screensaver..."
+      - cd native && xcodebuild -project {{.SAVER_NAME}}.xcodeproj -target {{.SAVER_NAME}} -configuration Release CODE_SIGN_IDENTITY="-" 2>&1 | grep -E "(Building|Compiling|Linking|error:|warning:|BUILD)" || true
+      - test -d native/build/Release/{{.SAVER_NAME}}.saver
+      - echo "Copying to dist..."
+      - cp -R native/build/Release/{{.SAVER_NAME}}.saver dist/
+      - echo ""
+      - echo "=== Build Complete ==="
+      - echo "Output{{":"}} dist/{{.SAVER_NAME}}.saver"
+    sources:
+      - native/{{.SAVER_NAME}}/**/*.swift
+      - native/{{.SAVER_NAME}}/**/*.plist
+      - dist/**/*
+    generates:
+      - dist/{{.SAVER_NAME}}.saver/**/*
+
+  ensure-web-assets:
+    desc: Build web assets if not present
+    internal: true
+    status:
+      - test -f dist/index.html
+      - test -f dist/assets/index.js
+    cmds:
+      - task: setup
+
+  # =============================================================================
+  # Installation
+  # =============================================================================
+
+  install:
+    desc: Install screensaver to ~/Library/Screen Savers and clear caches
+    deps: [build]
+    cmds:
+      - echo "=== Installing {{.SAVER_NAME}} ==="
+      - rm -rf "{{.INSTALL_DIR}}/{{.SAVER_NAME}}.saver"
+      - cp -R dist/{{.SAVER_NAME}}.saver "{{.INSTALL_DIR}}/"
+      - task: kill-processes
+      - echo ""
+      - echo "=== Installation Complete ==="
+      - echo "Installed to{{":"}} {{.INSTALL_DIR}}/{{.SAVER_NAME}}.saver"
+      - echo ""
+      - echo "To use{{":"}} System Settings → Screen Saver → Show All → {{.SAVER_NAME}}"
+
+  uninstall:
+    desc: Remove screensaver from ~/Library/Screen Savers
+    cmds:
+      - echo "Removing {{.SAVER_NAME}}..."
+      - rm -rf "{{.INSTALL_DIR}}/{{.SAVER_NAME}}.saver"
+      - task: kill-processes
+      - echo "Uninstalled."
+
+  # =============================================================================
+  # Testing & Debugging
+  # =============================================================================
+
+  run:
+    desc: Launch screensaver for testing (installs first if needed)
+    deps: [install]
+    cmds:
+      - echo "Launching screensaver..."
+      - open -a ScreenSaverEngine
+
+  preview:
+    desc: Open System Settings to screensaver preview
+    cmds:
+      - open "x-apple.systempreferences:com.apple.preference.desktopscreeneffect"
+
+  logs:
+    desc: Stream screensaver logs (run in separate terminal)
+    cmds:
+      - echo "Streaming logs for {{.SAVER_NAME}}... Press Ctrl+C to stop"
+      - log stream --predicate 'processImagePath contains "legacyScreenSaver" OR eventMessage contains "{{.SAVER_NAME}}" OR eventMessage contains "earthbound"'
+
+  logs-recent:
+    desc: Show recent screensaver logs (last 5 minutes)
+    cmds:
+      - log show --last 5m --predicate 'processImagePath contains "legacyScreenSaver" OR eventMessage contains "{{.SAVER_NAME}}"' 2>/dev/null | tail -100
+
+  logs-errors:
+    desc: Show recent screensaver errors
+    cmds:
+      - log show --last 10m --predicate '(processImagePath contains "legacyScreenSaver" OR eventMessage contains "{{.SAVER_NAME}}") AND messageType == error' 2>/dev/null | tail -50
+
+  # =============================================================================
+  # Process Management
+  # =============================================================================
+
+  kill-processes:
+    desc: Kill cached screensaver processes (required after rebuilding)
+    cmds:
+      - echo "Killing cached screensaver processes..."
+      - killall legacyScreenSaver 2>/dev/null || true
+      - killall WallpaperAgent 2>/dev/null || true
+      - killall ScreenSaverEngine 2>/dev/null || true
+      - sleep 1
+      - echo "Done."
+
+  ps:
+    desc: Show running screensaver-related processes
+    cmds:
+      - ps aux | grep -i -E "(screensaver|wallpaper)" | grep -v grep || echo "No screensaver processes running"
+
+  # =============================================================================
+  # Diagnostics
+  # =============================================================================
+
+  check:
+    desc: Run diagnostics on the screensaver installation
+    cmds:
+      - echo "=== Screensaver Diagnostics ==="
+      - echo ""
+      - echo "1. Installation check{{":"}}"
+      - test -d "{{.INSTALL_DIR}}/{{.SAVER_NAME}}.saver" && echo "   ✓ Installed" || echo "   ✗ Not installed (run 'task install')"
+      - echo ""
+      - echo "2. Code signature{{":"}}"
+      - codesign -vvv "{{.INSTALL_DIR}}/{{.SAVER_NAME}}.saver" 2>&1 | head -3 || echo "   ✗ Not signed or not installed"
+      - echo ""
+      - echo "3. Bundle contents{{":"}}"
+      - ls -la "{{.INSTALL_DIR}}/{{.SAVER_NAME}}.saver/Contents/Resources/Resources/" 2>/dev/null || echo "   ✗ Bundle not found"
+      - echo ""
+      - echo "4. macOS version{{":"}}"
+      - sw_vers
+
+  set-default:
+    desc: Set this screensaver as the system default
+    deps: [install]
+    cmds:
+      - echo "Setting {{.SAVER_NAME}} as default screensaver..."
+      - task: write-screensaver-pref
+
+  write-screensaver-pref:
+    internal: true
+    cmds:
+      - |
+        PLIST=$(ls ~/Library/Preferences/ByHost/com.apple.screensaver.*.plist 2>/dev/null | head -1)
+        if [ -n "$PLIST" ]; then
+          PLIST_NAME=$(basename "$PLIST" .plist)
+          defaults write ~/Library/Preferences/ByHost/"$PLIST_NAME" moduleDict -dict moduleName "{{.SAVER_NAME}}" path "$HOME/Library/Screen Savers/{{.SAVER_NAME}}.saver" type -int 0
+          echo "Done. {{.SAVER_NAME}} is now the default screensaver."
+        else
+          echo "Error: Could not find screensaver preferences"
+          exit 1
+        fi
+
+  # =============================================================================
+  # Cleanup
+  # =============================================================================
+
+  clean:
+    desc: Remove all build artifacts
+    cmds:
+      - echo "Cleaning build artifacts..."
+      - rm -rf dist
+      - rm -rf upstream
+      - rm -rf native/build
+      - rm -rf native/{{.SAVER_NAME}}/Resources
+      - echo "Done."
+
+  clean-all:
+    desc: Remove all build artifacts and uninstall
+    cmds:
+      - task: uninstall
+      - task: clean
+
+  # =============================================================================
+  # Development Helpers
+  # =============================================================================
+
+  rebuild:
+    desc: Clean, build, and install (full rebuild)
+    cmds:
+      - task: clean
+      - task: install
+
+  help-macos:
+    desc: Show macOS screensaver development tips
+    cmds:
+      - echo ""
+      - echo "macOS Screensaver Development Notes"
+      - echo "===================================="
+      - echo ""
+      - echo "CRITICAL FIX FOR SONOMA/SEQUOIA (macOS 14+/15+){{":"}}"
+      - echo "WKWebView-based screensavers show blank screens because macOS marks"
+      - echo "the WebView as 'occluded', pausing all JavaScript and CSS animations."
+      - echo ""
+      - echo "Required fix in Swift{{":"}}"
+      - echo "  let selector = NSSelectorFromString(\"_setWindowOcclusionDetectionEnabled{{\":\"}}\")"
+      - echo "  if webView.responds(to{{":"}} selector) {"
+      - echo "      webView.perform(selector, with{{":"}} false)"
+      - echo "  }"
+      - echo ""
+      - echo "BROKEN APIs (crash on macOS 15+){{":"}}"
+      - echo "  config.preferences.setValue(true, forKey{{":"}} \"allowFileAccessFromFileURLs\")"
+      - echo "  config.preferences.setValue(true, forKey{{":"}} \"allowUniversalAccessFromFileURLs\")"
+      - echo ""
+      - echo "DEBUGGING{{":"}}"
+      - echo "  task logs          - Stream live logs"
+      - echo "  task logs-errors   - Show recent errors"
+      - echo "  task check         - Run diagnostics"
+      - echo "  task kill-processes - Clear cached processes"
+      - echo ""
+      - echo "ARCHITECTURE{{":"}}"
+      - echo "  legacyScreenSaver - Hosts third-party .saver bundles"
+      - echo "  WallpaperAgent    - Manages screensaver lifecycle in Sequoia"
+      - echo "  Third-party screensavers appear in 'Other' section"
+      - echo ""

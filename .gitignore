@@ -16,3 +16,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Task (taskfile.dev) cache
+.task/
