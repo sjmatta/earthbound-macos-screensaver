@@ -25,62 +25,25 @@ cd "$PROJECT_DIR"
 # Clean previous builds
 rm -rf upstream dist
 
-# Clone upstream project
+# Clone upstream project (needed for source files)
 echo "Cloning Earthbound Battle Backgrounds JS..."
 git clone --depth 1 https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS.git upstream
 
-# Apply Vite config patch for file:// protocol compatibility
-echo "Patching Vite config for offline use..."
-cat > upstream/vite.config.js << 'EOF'
-import { defineConfig } from 'vite'
-import arraybuffer from 'vite-plugin-arraybuffer'
-
-export default defineConfig({
-  base: './',
-  plugins: [arraybuffer()],
-  build: {
-    rollupOptions: {
-      output: {
-        format: 'iife',
-        inlineDynamicImports: true,
-        entryFileNames: 'assets/[name].js',
-      }
-    }
-  }
-})
-EOF
-
-# Build upstream
+# Install our dependencies (including Vite)
 echo "Installing dependencies..."
-cd upstream
 npm install
 
-echo "Building..."
-npm run build
-cd ..
+# Build with Vite (bundles everything into a single file)
+echo "Building with Vite..."
+npm run build:vite
 
-# Create dist directory and copy assets
-echo "Copying assets..."
-mkdir -p dist/assets
-cp upstream/dist/assets/index.js dist/assets/
-cp upstream/dist/assets/utils.js dist/assets/
-
-# Copy source files to dist
-echo "Copying source files..."
+# Copy HTML to dist
+echo "Copying HTML..."
 cp src/index.html dist/
-cp src/screensaver.js dist/
 
-# Clean up upstream source
+# Clean up upstream source (no longer needed after build)
 rm -rf upstream
 
 echo ""
 echo "=== Setup Complete ==="
-echo ""
-echo "Screensaver file: $PROJECT_DIR/dist/index.html"
-echo ""
-echo "To use as macOS screensaver:"
-echo "1. Install WebViewScreenSaver: brew install --cask webviewscreensaver"
-echo "2. Open System Settings > Screen Saver"
-echo "3. Select WebViewScreenSaver"
-echo "4. Set URL to: file://$PROJECT_DIR/dist/index.html"
-echo ""
+echo "Web assets built in dist/"

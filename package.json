@@ -4,6 +4,7 @@
   "description": "macOS screensaver displaying Earthbound battle backgrounds",
   "author": "Stephen Matta",
   "license": "MIT",
+  "type": "module",
   "keywords": [
     "earthbound",
     "mother2",
@@ -15,10 +16,16 @@
   "scripts": {
     "setup": "task setup",
     "build": "task build",
-    "install": "task install",
-    "clean": "task clean"
+    "install-saver": "task install",
+    "clean": "task clean",
+    "dev": "vite",
+    "build:vite": "vite build"
   },
   "engines": {
     "node": ">= 24.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "vite-plugin-arraybuffer": "^0.0.8"
   }
 }

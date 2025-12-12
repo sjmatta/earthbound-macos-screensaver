@@ -30,6 +30,7 @@ jobs:
           test -d dist/EarthboundScreensaver.saver
           test -f dist/EarthboundScreensaver.saver/Contents/MacOS/EarthboundScreensaver
           test -f dist/EarthboundScreensaver.saver/Contents/Resources/Resources/index.html
+          test -f dist/EarthboundScreensaver.saver/Contents/Resources/Resources/screensaver.js
 
       - name: Check code signing
         run: codesign -vvv dist/EarthboundScreensaver.saver

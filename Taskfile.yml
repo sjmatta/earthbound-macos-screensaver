@@ -29,7 +29,7 @@ tasks:
   # =============================================================================
 
   setup:
-    desc: Build web assets from upstream Earthbound Battle Backgrounds JS
+    desc: Build web assets using Vite (bundles all JS into single file)
     preconditions:
       - sh: command -v node
         msg: "Node.js is required. Install with: nvm install {{.NODE_MIN_VERSION}}"
@@ -39,52 +39,24 @@ tasks:
       - rm -rf upstream dist
       - echo "Cloning Earthbound Battle Backgrounds JS..."
       - git clone --depth 1 https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS.git upstream
-      - echo "Patching Vite config for offline use..."
-      - task: write-vite-config
       - echo "Installing upstream dependencies..."
       - cd upstream && npm install
-      - echo "Building upstream..."
-      - cd upstream && npm run build
-      - echo "Copying assets..."
-      - mkdir -p dist/assets
-      - cp upstream/dist/assets/index.js dist/assets/
-      - cp upstream/dist/assets/utils.js dist/assets/
+      - echo "Installing project dependencies..."
+      - npm install
+      - echo "Building with Vite (bundling all modules)..."
+      - npm run build:vite
+      - echo "Copying HTML..."
       - cp src/index.html dist/
-      - cp src/screensaver.js dist/
       - rm -rf upstream
       - echo ""
       - echo "=== Setup Complete ==="
       - echo "Web assets built in dist/"
     sources:
       - src/**/*
+      - vite.config.js
     generates:
       - dist/index.html
       - dist/screensaver.js
-      - dist/assets/index.js
-      - dist/assets/utils.js
-
-  write-vite-config:
-    internal: true
-    cmds:
-      - |
-        cat > upstream/vite.config.js << 'VITECONFIG'
-        import { defineConfig } from 'vite'
-        import arraybuffer from 'vite-plugin-arraybuffer'
-
-        export default defineConfig({
-          base: './',
-          plugins: [arraybuffer()],
-          build: {
-            rollupOptions: {
-              output: {
-                format: 'iife',
-                inlineDynamicImports: true,
-                entryFileNames: 'assets/[name].js',
-              }
-            }
-          }
-        })
-        VITECONFIG
 
   build:
     desc: Build native .saver bundle (runs setup if needed)
@@ -96,11 +68,9 @@ tasks:
       - echo "=== Building {{.SAVER_NAME}}.saver ==="
       - echo "Copying web assets to native bundle..."
       - rm -rf native/{{.SAVER_NAME}}/Resources
-      - mkdir -p native/{{.SAVER_NAME}}/Resources/assets
+      - mkdir -p native/{{.SAVER_NAME}}/Resources
       - cp dist/index.html native/{{.SAVER_NAME}}/Resources/
       - cp dist/screensaver.js native/{{.SAVER_NAME}}/Resources/
-      - cp dist/assets/index.js native/{{.SAVER_NAME}}/Resources/assets/
-      - cp dist/assets/utils.js native/{{.SAVER_NAME}}/Resources/assets/
       - echo "Building native screensaver..."
       - cd native && xcodebuild -project {{.SAVER_NAME}}.xcodeproj -target {{.SAVER_NAME}} -configuration Release CODE_SIGN_IDENTITY="-" 2>&1 | grep -E "(Building|Compiling|Linking|error:|warning:|BUILD)" || true
       - test -d native/build/Release/{{.SAVER_NAME}}.saver
@@ -121,7 +91,7 @@ tasks:
     internal: true
     status:
       - test -f dist/index.html
-      - test -f dist/assets/index.js
+      - test -f dist/screensaver.js
     cmds:
       - task: setup
 
@@ -256,6 +226,7 @@ tasks:
       - rm -rf upstream
       - rm -rf native/build
       - rm -rf native/{{.SAVER_NAME}}/Resources
+      - rm -rf node_modules
       - echo "Done."
 
   clean-all:
@@ -273,6 +244,11 @@ tasks:
     cmds:
       - task: clean
       - task: install
+
+  dev:
+    desc: Start Vite dev server for testing in browser
+    cmds:
+      - npm run dev
 
   help-macos:
     desc: Show macOS screensaver development tips

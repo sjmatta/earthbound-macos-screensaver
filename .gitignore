@@ -19,3 +19,4 @@ Thumbs.db
 
 # Task (taskfile.dev) cache
 .task/
+node_modules/
