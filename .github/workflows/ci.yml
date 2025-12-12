@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -19,12 +19,17 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Build
-        run: npm run setup
+      - name: Install Task
+        run: brew install go-task
+
+      - name: Build native screensaver
+        run: task build
 
       - name: Verify build output
         run: |
-          test -f dist/index.html
-          test -f dist/screensaver.js
-          test -f dist/assets/index.js
-          test -f dist/assets/utils.js
+          test -d dist/EarthboundScreensaver.saver
+          test -f dist/EarthboundScreensaver.saver/Contents/MacOS/EarthboundScreensaver
+          test -f dist/EarthboundScreensaver.saver/Contents/Resources/Resources/index.html
+
+      - name: Check code signing
+        run: codesign -vvv dist/EarthboundScreensaver.saver

@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -17,15 +17,23 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Build
-        run: npm run setup
+      - name: Install Task
+        run: brew install go-task
+
+      - name: Build native screensaver
+        run: task build
+
+      - name: Verify build
+        run: |
+          test -d dist/EarthboundScreensaver.saver
+          codesign -vvv dist/EarthboundScreensaver.saver
 
       - name: Create release archive
         run: |
           cd dist
-          zip -r ../earthbound-screensaver-${{ github.event.release.tag_name }}.zip .
+          zip -r ../EarthboundScreensaver-${{ github.event.release.tag_name }}.zip EarthboundScreensaver.saver
 
       - name: Upload release asset
         uses: softprops/action-gh-release@v2
         with:
-          files: earthbound-screensaver-${{ github.event.release.tag_name }}.zip
+          files: EarthboundScreensaver-${{ github.event.release.tag_name }}.zip
