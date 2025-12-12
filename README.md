@@ -4,6 +4,15 @@ A native macOS screensaver that displays the iconic battle backgrounds from Eart
 
 ![Earthbound Screensaver](assets/screenshot.png)
 
+## Credits
+
+This project is a thin wrapper around **[Earthbound Battle Backgrounds JS](https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS)** by **[Garen Torikian](https://github.com/gjtorikian)** — all the rendering magic happens there.
+
+Additional thanks to:
+- **[@kdex](https://github.com/kdex)** — ES2016 rewrite of the engine
+- **Mr. Accident** (forum.starmen.net) — Original C# implementation and distortion math
+- **[liquidx](https://github.com/liquidx)** — WebViewScreenSaver (reference for macOS WKWebView fixes)
+
 ## Features
 
 - **52,650 Combinations**: Randomly cycles through all 327 layer styles in two-layer compositions
@@ -113,13 +122,6 @@ This screensaver uses [Earthbound Battle Backgrounds JS](https://github.com/gjto
 4. Wraps in a native macOS `.saver` bundle with WKWebView
 
 The native wrapper includes critical fixes for macOS Sonoma/Sequoia compatibility (disabling WKWebView window occlusion detection).
-
-## Credits
-
-- **[Garen Torikian](https://github.com/gjtorikian)** - Earthbound Battle Backgrounds JS
-- **[@kdex](https://github.com/kdex)** - ES2016 rewrite
-- **Mr. Accident** (forum.starmen.net) - Original C# implementation and distortion math
-- **[liquidx](https://github.com/liquidx)** - WebViewScreenSaver (reference implementation)
 
 ## License
 
