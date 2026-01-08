@@ -42,7 +42,7 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
             webView.perform(selector, with: false)
             os_log("Disabled window occlusion detection", log: logger, type: .info)
         } else {
-            os_log("Warning: _setWindowOcclusionDetectionEnabled: not available", log: logger, type: .error)
+            os_log("_setWindowOcclusionDetectionEnabled: not available (pre-Sonoma)", log: logger, type: .info)
         }
 
         // Disable scrolling and bouncing
@@ -103,5 +103,12 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
     // Capture input to prevent web view from handling it
     override func hitTest(_ point: NSPoint) -> NSView? {
         return self
+    }
+
+    // Lifecycle: stop WebView when screensaver stops to prevent resource leaks
+    override func stopAnimation() {
+        super.stopAnimation()
+        webView?.stopLoading()
+        os_log("EarthboundScreensaver stopped", log: logger, type: .info)
     }
 }

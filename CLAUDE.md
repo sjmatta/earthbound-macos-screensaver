@@ -1,7 +1,42 @@
-# Claude Code Notes - Earthbound Screensaver
+# CLAUDE.md
 
-## Project Overview
-A native macOS screensaver that displays Earthbound battle backgrounds using WKWebView to render JavaScript-based animations.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Build Commands
+
+This project uses [Task](https://taskfile.dev) for build automation. Primary commands:
+
+```bash
+task install      # Build everything and install to ~/Library/Screen Savers
+task run          # Install and launch screensaver for testing
+task dev          # Start Vite dev server for browser testing
+task logs         # Stream live screensaver logs (run in separate terminal)
+task check        # Run diagnostics on installation
+task clean        # Remove all build artifacts
+task kill-processes  # Clear cached screensaver processes after rebuilding
+```
+
+Individual build steps:
+```bash
+task setup        # Build web assets with Vite (npm install + vite build)
+task build        # Build native .saver bundle (runs setup if needed)
+```
+
+## Architecture
+
+Two-layer system: JavaScript rendering wrapped in a native macOS screensaver bundle.
+
+**Web Layer** (`src/`):
+- `main.js` - Initializes the Earthbound Battle Backgrounds engine, randomly cycles through 327 layer combinations
+- Uses `earthbound-battle-backgrounds` npm package for rendering
+- Vite bundles everything into a single `screensaver.js` file (IIFE format)
+
+**Native Layer** (`native/EarthboundScreensaver/`):
+- `EarthboundScreensaverView.swift` - Main screensaver view, hosts WKWebView
+- `ConfigureSheetController.swift` - Settings UI for cycle interval
+- Loads bundled HTML/JS via `loadFileURL(_:allowingReadAccessTo:)`
+
+**Build Output**: `dist/EarthboundScreensaver.saver` - self-contained macOS screensaver bundle
 
 ## Critical: macOS Sonoma/Sequoia WKWebView Fix
 
@@ -36,53 +71,26 @@ Pass the bundle's root URL to `allowingReadAccessTo:` to enable access to all re
 
 ## Debugging macOS Screensavers
 
-### Log Locations
-Screensaver logs can be found using:
+### Log Commands
 ```bash
+task logs                # Stream live logs
+task logs-errors         # Show recent errors only
 log show --last 5m --predicate 'processImagePath contains "legacyScreenSaver"'
-log show --last 5m --predicate 'eventMessage contains "YourScreensaverName"'
 ```
 
-### Screensaver Preferences
-Stored in: `~/Library/Preferences/ByHost/com.apple.screensaver.<MACHINE-UUID>.plist`
+### Key Processes
+- `legacyScreenSaver` - Hosts third-party .saver bundles
+- `WallpaperAgent` - Manages screensaver/wallpaper lifecycle in Sequoia
+- `ScreenSaverEngine` - Main screensaver app
 
-View with:
+### Screensaver Preferences Location
 ```bash
 plutil -p ~/Library/Preferences/ByHost/com.apple.screensaver.*.plist
 ```
 
-### Key Processes
-- `ScreenSaverEngine` - Main screensaver app
-- `legacyScreenSaver` - Hosts third-party .saver bundles
-- `WallpaperAgent` - Manages screensaver/wallpaper lifecycle in Sequoia
-
-### Clearing Cached Processes
-After rebuilding, kill cached processes:
-```bash
-killall legacyScreenSaver 2>/dev/null
-killall WallpaperAgent 2>/dev/null
-killall ScreenSaverEngine 2>/dev/null
-```
-
-## macOS Sequoia (15.x) Screensaver Behavior
-- Third-party screensavers are in the "Other" section (click "Show All" to see them)
-- The UI is more restrictive toward third-party screensavers
-- WKWebView works but requires the occlusion detection fix
-
-## Build & Install
-
-### Build
-```bash
-npm run build:saver
-```
-
-### Install
-```bash
-cp -R dist/EarthboundScreensaver.saver ~/Library/Screen\ Savers/
-```
-
-### Code Signing
-Ad-hoc signing (`CODE_SIGN_IDENTITY="-"`) works for local development. For distribution, use a proper Developer ID.
+### macOS Sequoia Notes
+- Third-party screensavers appear in "Other" section (click "Show All" to see them)
+- WKWebView works but requires the occlusion detection fix above
 
 ## References
 - [WebViewScreenSaver GitHub](https://github.com/liquidx/webviewscreensaver)

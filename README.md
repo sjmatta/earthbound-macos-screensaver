@@ -26,9 +26,10 @@ Additional thanks to:
 
 ### Option 1: Download Pre-built Release (Easiest)
 
-1. Download the latest `EarthboundScreensaver.saver` from [Releases](../../releases)
-2. Double-click to install, or copy to `~/Library/Screen Savers/`
-3. Open **System Settings** → **Screen Saver** → click **Show All** → select **Earthbound Screensaver**
+1. Download the latest `EarthboundScreensaver.saver.zip` from [Releases](../../releases)
+2. Unzip and double-click the `.saver` file to install
+3. **If macOS blocks installation:** Right-click the `.saver` file → **Open** → **Open** again to bypass Gatekeeper (the screensaver is not notarized)
+4. Open **System Settings** → **Screen Saver** → click **Show All** → select **Earthbound Screensaver**
 
 ### Option 2: Build from Source
 

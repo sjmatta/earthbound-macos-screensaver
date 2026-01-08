@@ -21,6 +21,7 @@ const ROM = new Rom(backgroundData)
 globalThis.ROM = ROM
 
 let engine = null
+let cycleIntervalId = null
 
 function getCycleInterval() {
   const params = new URLSearchParams(window.location.search)
@@ -57,8 +58,18 @@ function start() {
 
   const interval = getCycleInterval()
   console.log(`Screensaver: cycling every ${interval / 1000}s`)
-  setInterval(setRandomLayers, interval)
+  cycleIntervalId = setInterval(setRandomLayers, interval)
 }
+
+function stop() {
+  if (cycleIntervalId) {
+    clearInterval(cycleIntervalId)
+    cycleIntervalId = null
+  }
+  engine = null
+}
+
+window.addEventListener('unload', stop)
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', start)
