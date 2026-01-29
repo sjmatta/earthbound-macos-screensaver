@@ -2,14 +2,14 @@ import { defineConfig } from 'vite'
 import arraybuffer from 'vite-plugin-arraybuffer'
 
 export default defineConfig({
+  root: 'src',
   base: './',
   plugins: [arraybuffer()],
   build: {
-    outDir: 'dist',
+    outDir: '../dist',
+    emptyOutDir: true,
     rollupOptions: {
-      input: 'src/main.js',
       output: {
-        format: 'iife',
         inlineDynamicImports: true,
         entryFileNames: 'screensaver.js',
       }

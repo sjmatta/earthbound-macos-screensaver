@@ -2,7 +2,7 @@
 
 A native macOS screensaver that displays the iconic battle backgrounds from Earthbound/Mother 2, cycling through random combinations.
 
-![Earthbound Screensaver](assets/screenshot.png)
+![Earthbound Screensaver](assets/demo.gif)
 
 ## Credits
 
@@ -79,7 +79,7 @@ Customize behavior by editing `src/screensaver.js` before building, or via URL p
 earthbound-screensaver/
 ├── Taskfile.yml              # Build tasks (run with `task`)
 ├── assets/
-│   └── screenshot.png        # README screenshot
+│   └── demo.gif              # README animation
 ├── src/
 │   ├── index.html            # HTML entry point
 │   └── main.js               # Screensaver logic

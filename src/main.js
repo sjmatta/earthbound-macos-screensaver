@@ -55,6 +55,16 @@ function randomLayer() {
   return Math.floor(Math.random() * LAYER_COUNT)
 }
 
+function getSpecificLayers() {
+  const params = new URLSearchParams(window.location.search)
+  const layer1 = parseInt(params.get('layer1'), 10)
+  const layer2 = parseInt(params.get('layer2'), 10)
+  if (layer1 >= 0 && layer1 < LAYER_COUNT && layer2 >= 0 && layer2 < LAYER_COUNT) {
+    return [layer1, layer2]
+  }
+  return null
+}
+
 function getLayerName(index) {
   return layerNames[index] || `Layer ${index}`
 }
@@ -91,8 +101,13 @@ function start() {
   const debug = params.get('debug') === 'true'
   showLayerNames = getShowLayerNames()
 
+  // Use specific layers if provided, otherwise random
+  const specificLayers = getSpecificLayers()
+  const layer1 = specificLayers ? specificLayers[0] : randomLayer()
+  const layer2 = specificLayers ? specificLayers[1] : randomLayer()
+
   engine = new Engine(
-    [new BackgroundLayer(randomLayer(), ROM), new BackgroundLayer(randomLayer(), ROM)],
+    [new BackgroundLayer(layer1, ROM), new BackgroundLayer(layer2, ROM)],
     {
       fps: 30,
       aspectRatio: 0,
