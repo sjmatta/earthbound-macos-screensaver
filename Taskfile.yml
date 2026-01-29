@@ -41,8 +41,9 @@ tasks:
       - npm install
       - echo "Building with Vite (bundling all modules)..."
       - npm run build:vite
-      - echo "Copying HTML..."
+      - echo "Copying HTML and fonts..."
       - cp src/index.html dist/
+      - cp -R src/fonts dist/
       - echo ""
       - echo "=== Setup Complete ==="
       - echo "Web assets built in dist/"
@@ -53,6 +54,7 @@ tasks:
     generates:
       - dist/index.html
       - dist/screensaver.js
+      - dist/fonts/**/*
 
   build:
     desc: Build native .saver bundle (runs setup if needed)
@@ -67,6 +69,7 @@ tasks:
       - mkdir -p native/{{.SAVER_NAME}}/Resources
       - cp dist/index.html native/{{.SAVER_NAME}}/Resources/
       - cp dist/screensaver.js native/{{.SAVER_NAME}}/Resources/
+      - cp -R dist/fonts native/{{.SAVER_NAME}}/Resources/
       - echo "Building native screensaver..."
       - cd native && xcodebuild -project {{.SAVER_NAME}}.xcodeproj -target {{.SAVER_NAME}} -configuration Release CODE_SIGN_IDENTITY="-" 2>&1 | grep -E "(Building|Compiling|Linking|error:|warning:|BUILD)" || true
       - test -d native/build/Release/{{.SAVER_NAME}}.saver
@@ -88,6 +91,7 @@ tasks:
     status:
       - test -f dist/index.html
       - test -f dist/screensaver.js
+      - test -d dist/fonts
     cmds:
       - task: setup
 

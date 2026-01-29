@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Earthbound Battle Backgrounds Screensaver</title>
     <style>
+      @font-face {
+        font-family: 'Press Start 2P';
+        src: url('./fonts/PressStart2P-Regular.woff2') format('woff2');
+        font-display: swap;
+      }
+
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
         width: 100%;
@@ -20,10 +26,47 @@
         image-rendering: pixelated;
         image-rendering: crisp-edges;
       }
+
+      /* Earthbound-style dialog box */
+      .eb-window {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #000;
+        color: #f3edae;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 12px;
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow:
+          0 0 0 4px #383050,
+          0 0 0 8px #5858a8,
+          0 0 0 10px #8888c8;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        z-index: 100;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      .eb-window.visible {
+        opacity: 1;
+      }
+
+      .eb-window .separator {
+        margin: 0 12px;
+        color: #8888c8;
+      }
     </style>
   </head>
   <body>
     <canvas id="main"></canvas>
+    <div id="layer-indicator" class="eb-window">
+      <span id="layer1-name">Layer 0</span>
+      <span class="separator">×</span>
+      <span id="layer2-name">Layer 0</span>
+    </div>
     <script src="./screensaver.js"></script>
   </body>
 </html>
