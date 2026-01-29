@@ -15,13 +15,18 @@ class ConfigureSheetController: NSObject {
     private var window: NSWindow!
     private var intervalTextField: NSTextField!
     private var intervalStepper: NSStepper!
+    private var showLayerNamesCheckbox: NSButton!
 
     private let defaults = ScreenSaverDefaults(forModuleWithName: "com.sjmatta.earthbound-screensaver")!
+
+    // Callback when settings are saved
+    var onSettingsChanged: (() -> Void)?
 
     // Default values
     static let defaultInterval: Int = 60
     static let minInterval: Int = 5
     static let maxInterval: Int = 300
+    static let defaultShowLayerNames: Bool = true
 
     // MARK: - Public Interface
 
@@ -36,11 +41,25 @@ class ConfigureSheetController: NSObject {
         }
     }
 
+    var showLayerNames: Bool {
+        get {
+            // Check if the key exists; if not, return default (true)
+            if defaults.object(forKey: "showLayerNames") == nil {
+                return ConfigureSheetController.defaultShowLayerNames
+            }
+            return defaults.bool(forKey: "showLayerNames")
+        }
+        set {
+            defaults.set(newValue, forKey: "showLayerNames")
+            defaults.synchronize()
+        }
+    }
+
     // MARK: - Window Creation
 
     func createConfigureSheet() -> NSWindow {
         // Create window
-        let contentRect = NSRect(x: 0, y: 0, width: 320, height: 120)
+        let contentRect = NSRect(x: 0, y: 0, width: 320, height: 150)
         window = NSWindow(
             contentRect: contentRect,
             styleMask: [.titled],
@@ -54,17 +73,16 @@ class ConfigureSheetController: NSObject {
         // Create UI elements
         let margin: CGFloat = 20
         let labelWidth: CGFloat = 140
-        let controlWidth: CGFloat = 80
         let rowHeight: CGFloat = 24
 
         // Interval label
         let intervalLabel = NSTextField(labelWithString: "Change interval:")
-        intervalLabel.frame = NSRect(x: margin, y: 70, width: labelWidth, height: rowHeight)
+        intervalLabel.frame = NSRect(x: margin, y: 100, width: labelWidth, height: rowHeight)
         intervalLabel.alignment = .right
         contentView.addSubview(intervalLabel)
 
         // Interval text field
-        intervalTextField = NSTextField(frame: NSRect(x: margin + labelWidth + 10, y: 70, width: 50, height: rowHeight))
+        intervalTextField = NSTextField(frame: NSRect(x: margin + labelWidth + 10, y: 100, width: 50, height: rowHeight))
         intervalTextField.integerValue = interval
         intervalTextField.formatter = createNumberFormatter()
         intervalTextField.target = self
@@ -72,7 +90,7 @@ class ConfigureSheetController: NSObject {
         contentView.addSubview(intervalTextField)
 
         // Interval stepper
-        intervalStepper = NSStepper(frame: NSRect(x: margin + labelWidth + 65, y: 70, width: 19, height: rowHeight))
+        intervalStepper = NSStepper(frame: NSRect(x: margin + labelWidth + 65, y: 100, width: 19, height: rowHeight))
         intervalStepper.minValue = Double(ConfigureSheetController.minInterval)
         intervalStepper.maxValue = Double(ConfigureSheetController.maxInterval)
         intervalStepper.increment = 5
@@ -83,8 +101,14 @@ class ConfigureSheetController: NSObject {
 
         // Seconds label
         let secondsLabel = NSTextField(labelWithString: "seconds")
-        secondsLabel.frame = NSRect(x: margin + labelWidth + 90, y: 70, width: 60, height: rowHeight)
+        secondsLabel.frame = NSRect(x: margin + labelWidth + 90, y: 100, width: 60, height: rowHeight)
         contentView.addSubview(secondsLabel)
+
+        // Show layer names checkbox
+        showLayerNamesCheckbox = NSButton(checkboxWithTitle: "Show layer names", target: nil, action: nil)
+        showLayerNamesCheckbox.frame = NSRect(x: margin + labelWidth + 10 - 4, y: 65, width: 160, height: rowHeight)
+        showLayerNamesCheckbox.state = showLayerNames ? .on : .off
+        contentView.addSubview(showLayerNamesCheckbox)
 
         // Buttons
         let buttonWidth: CGFloat = 80
@@ -138,6 +162,7 @@ class ConfigureSheetController: NSObject {
         // Reset to saved values
         intervalTextField.integerValue = interval
         intervalStepper.integerValue = interval
+        showLayerNamesCheckbox.state = showLayerNames ? .on : .off
 
         // Close sheet
         if let sheetParent = window.sheetParent {
@@ -148,10 +173,14 @@ class ConfigureSheetController: NSObject {
     @objc private func okClicked(_ sender: NSButton) {
         // Save values
         interval = intervalTextField.integerValue
+        showLayerNames = showLayerNamesCheckbox.state == .on
 
         // Close sheet
         if let sheetParent = window.sheetParent {
             sheetParent.endSheet(window)
         }
+
+        // Notify that settings changed
+        onSettingsChanged?()
     }
 }

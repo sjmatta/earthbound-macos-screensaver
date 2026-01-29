@@ -13,7 +13,13 @@ private let logger = OSLog(subsystem: "com.sjmatta.earthbound-screensaver", cate
 
 class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
     private var webView: WKWebView!
-    private lazy var sheetController = ConfigureSheetController()
+    private lazy var sheetController: ConfigureSheetController = {
+        let controller = ConfigureSheetController()
+        controller.onSettingsChanged = { [weak self] in
+            self?.applySettings()
+        }
+        return controller
+    }()
 
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
@@ -60,23 +66,40 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
 
         // Resources are in a subdirectory due to how Xcode copies folder references
         if let htmlURL = bundle.url(forResource: "index", withExtension: "html", subdirectory: "Resources") {
-            // Add interval parameter from user preferences
+            // Add parameters from user preferences
             let interval = sheetController.interval
+            let showLayerNames = sheetController.showLayerNames
             var urlComponents = URLComponents(url: htmlURL, resolvingAgainstBaseURL: false)!
-            urlComponents.queryItems = [URLQueryItem(name: "interval", value: String(interval))]
+            urlComponents.queryItems = [
+                URLQueryItem(name: "interval", value: String(interval)),
+                URLQueryItem(name: "showLayerNames", value: String(showLayerNames))
+            ]
 
             guard let urlWithParams = urlComponents.url else {
                 os_log("ERROR: Could not create URL with parameters", log: logger, type: .error)
                 return
             }
 
-            os_log("Loading URL: %{public}@ (interval: %{public}d)", log: logger, type: .info, urlWithParams.absoluteString, interval)
+            os_log("Loading URL: %{public}@ (interval: %{public}d, showLayerNames: %{public}@)", log: logger, type: .info, urlWithParams.absoluteString, interval, String(showLayerNames))
 
             // Allow read access to the entire bundle to ensure all resources can load
             let bundleURL = bundle.bundleURL
             webView.loadFileURL(urlWithParams, allowingReadAccessTo: bundleURL)
         } else {
             os_log("ERROR: Could not find index.html in Resources", log: logger, type: .error)
+        }
+    }
+
+    private func applySettings() {
+        let showLayerNames = sheetController.showLayerNames
+        os_log("Applying settings: showLayerNames=%{public}@", log: logger, type: .info, String(showLayerNames))
+
+        // Update JavaScript via exposed function
+        let js = "window.setShowLayerNames(\(showLayerNames));"
+        webView.evaluateJavaScript(js) { _, error in
+            if let error = error {
+                os_log("Failed to apply settings: %{public}@", log: logger, type: .error, error.localizedDescription)
+            }
         }
     }
 

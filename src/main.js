@@ -5,8 +5,9 @@
  * Built with Vite - all dependencies are bundled into a single file.
  *
  * URL Parameters:
- *   ?interval=30  - Cycle every 30 seconds (default: 60)
- *   ?debug=true   - Enable debug overlay
+ *   ?interval=30        - Cycle every 30 seconds (default: 60)
+ *   ?showLayerNames=false - Hide layer name indicator (default: true)
+ *   ?debug=true         - Enable debug overlay
  */
 
 import Rom from 'earthbound-battle-backgrounds/src/rom/rom'
@@ -25,11 +26,29 @@ globalThis.ROM = ROM
 let engine = null
 let cycleIntervalId = null
 let indicatorTimeoutId = null
+let showLayerNames = true
+
+// Expose setter for native code to update setting
+window.setShowLayerNames = function(value) {
+  showLayerNames = value
+  // Hide indicator immediately if turning off
+  if (!value) {
+    const indicator = document.getElementById('layer-indicator')
+    if (indicator) indicator.classList.remove('visible')
+  }
+}
 
 function getCycleInterval() {
   const params = new URLSearchParams(window.location.search)
   const interval = parseInt(params.get('interval'), 10)
   return (interval > 0 ? interval : DEFAULT_INTERVAL_SECONDS) * 1000
+}
+
+function getShowLayerNames() {
+  const params = new URLSearchParams(window.location.search)
+  const value = params.get('showLayerNames')
+  // Default to true if not specified
+  return value !== 'false'
 }
 
 function randomLayer() {
@@ -41,6 +60,8 @@ function getLayerName(index) {
 }
 
 function showLayerIndicator() {
+  if (!showLayerNames) return
+
   const indicator = document.getElementById('layer-indicator')
   const layer1El = document.getElementById('layer1-name')
   const layer2El = document.getElementById('layer2-name')
@@ -68,6 +89,7 @@ function setRandomLayers() {
 function start() {
   const params = new URLSearchParams(window.location.search)
   const debug = params.get('debug') === 'true'
+  showLayerNames = getShowLayerNames()
 
   engine = new Engine(
     [new BackgroundLayer(randomLayer(), ROM), new BackgroundLayer(randomLayer(), ROM)],
