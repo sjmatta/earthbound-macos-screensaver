@@ -12,6 +12,7 @@ Additional thanks to:
 - **[@kdex](https://github.com/kdex)** — ES2016 rewrite of the engine
 - **Mr. Accident** (forum.starmen.net) — Original C# implementation and distortion math
 - **[liquidx](https://github.com/liquidx)** — WebViewScreenSaver (reference for macOS WKWebView fixes)
+- **[CodeMan38](https://www.zone38.net/)** — [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P) font (SIL OFL 1.1)
 
 ## Features
 
@@ -127,5 +128,7 @@ The native wrapper includes critical fixes for macOS Sonoma/Sequoia compatibilit
 ## License
 
 MIT License - see [LICENSE](LICENSE)
+
+Third-party licenses are listed in [NOTICES](NOTICES).
 
 This project is not affiliated with Nintendo, Ape, HAL Laboratory, or Shigesato Itoi.
