@@ -1,8 +1,14 @@
 name: Build and Release
 
 on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
   release:
     types: [created]
+
+permissions:
+  contents: write  # Required to upload release assets
 
 jobs:
   build:
@@ -31,9 +37,9 @@ jobs:
       - name: Create release archive
         run: |
           cd dist
-          zip -r ../EarthboundScreensaver-${{ github.event.release.tag_name }}.zip EarthboundScreensaver.saver
+          zip -r ../EarthboundScreensaver-${GITHUB_REF_NAME}.zip EarthboundScreensaver.saver
 
       - name: Upload release asset
         uses: softprops/action-gh-release@v2
         with:
-          files: EarthboundScreensaver-${{ github.event.release.tag_name }}.zip
+          files: EarthboundScreensaver-${{ github.ref_name }}.zip
