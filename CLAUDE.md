@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Prerequisites
+
+- Node.js 24+ (see `.nvmrc`)
+- Xcode (for native `.saver` build via `xcodebuild`)
+- [Task](https://taskfile.dev) (`brew install go-task`)
+
 ## Build Commands
 
 This project uses [Task](https://taskfile.dev) for build automation. Primary commands:
@@ -13,6 +19,7 @@ task dev          # Start Vite dev server for browser testing
 task logs         # Stream live screensaver logs (run in separate terminal)
 task check        # Run diagnostics on installation
 task clean        # Remove all build artifacts
+task rebuild      # Clean + full rebuild + install
 task kill-processes  # Clear cached screensaver processes after rebuilding
 ```
 
@@ -21,6 +28,8 @@ Individual build steps:
 task setup        # Build web assets with Vite (npm install + vite build)
 task build        # Build native .saver bundle (runs setup if needed)
 ```
+
+CI runs on GitHub Actions (`.github/workflows/ci.yml`) on push/PR to `main` — builds the native bundle and verifies the output structure.
 
 ## Architecture
 
@@ -32,9 +41,17 @@ Two-layer system: JavaScript rendering wrapped in a native macOS screensaver bun
 - Vite bundles everything into a single `screensaver.js` file (IIFE format)
 
 **Native Layer** (`native/EarthboundScreensaver/`):
-- `EarthboundScreensaverView.swift` - Main screensaver view, hosts WKWebView
-- `ConfigureSheetController.swift` - Settings UI for cycle interval
+- `EarthboundScreensaverView.swift` - Main screensaver view, hosts WKWebView, passes settings as URL query params
+- `ConfigureSheetController.swift` - Settings UI (cycle interval, show layer names), communicates changes to JS via `webView.evaluateJavaScript`
 - Loads bundled HTML/JS via `loadFileURL(_:allowingReadAccessTo:)`
+
+**Native ↔ Web bridge**: Native code passes `?interval=N&showLayerNames=bool` on initial load. Runtime updates call `window.setShowLayerNames(bool)` via `evaluateJavaScript`.
+
+**URL Parameters** (for dev/browser testing):
+- `interval` — seconds between background changes (default: 60)
+- `showLayerNames` — show/hide layer name indicator (default: true)
+- `layer1` / `layer2` — pin specific layer indices (0–326)
+- `debug` — enable debug overlay
 
 **Build Output**: `dist/EarthboundScreensaver.saver` - self-contained macOS screensaver bundle
 
@@ -54,6 +71,9 @@ if webView.responds(to: selector) {
 ```
 
 This fix was discovered in the [WebViewScreenSaver project](https://github.com/liquidx/webviewscreensaver/commit/827156642601ac6ce1fbe2b632e8d6d424bcbbd3).
+
+### Script Tags Must Not Use `type="module"` (file:// CORS Issue)
+WKWebView loaded via `loadFileURL` uses `file://` origins. ES module scripts (`<script type="module">`) enforce CORS, which silently fails on `file://` — JavaScript never executes and the screen is blank with no errors in logs. The Vite build config includes a `fileUrlCompatPlugin` that strips `type="module"` and `crossorigin` from the output HTML and uses `format: 'iife'` for the JS bundle. After any Vite upgrade, verify `dist/index.html` has a plain `<script>` tag.
 
 ### What Does NOT Work (macOS 15+)
 The following private WKPreferences APIs throw `NSUnknownKeyException` and will crash the screensaver:
