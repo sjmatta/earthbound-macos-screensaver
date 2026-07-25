@@ -37,10 +37,13 @@ tasks:
       - echo "=== Earthbound Screensaver Setup ==="
       - echo "Node.js version:" $(node -v)
       - rm -rf dist
+      # npm ci, not npm install: the engine is a git dependency, so only the
+      # lockfile's pinned commit makes a build reproducible.
       - echo "Installing dependencies..."
-      - npm install
+      - npm ci
       - echo "Building with Vite (bundling all modules)..."
       - npm run build:vite
+      - task: verify-web-assets
       - echo ""
       - echo "=== Setup Complete ==="
       - echo "Web assets built in dist/"
@@ -52,6 +55,31 @@ tasks:
       - dist/index.html
       - dist/screensaver.js
       - dist/assets/**/*
+
+  verify-web-assets:
+    desc: Assert the built HTML still loads from a file:// URL (see CLAUDE.md)
+    cmds:
+      - |
+        set -e
+        echo "Verifying file:// compatibility of dist/index.html..."
+        if grep -qE 'type="module"|crossorigin' dist/index.html; then
+          echo "ERROR: dist/index.html contains type=\"module\" or crossorigin."
+          echo "Module scripts enforce CORS, which fails silently on file:// origins and"
+          echo "leaves the screensaver blank. Check fileUrlCompatPlugin in vite.config.js."
+          exit 1
+        fi
+        if ! grep -q '<script src="./screensaver.js"></script>' dist/index.html; then
+          echo "ERROR: dist/index.html is missing the plain <script> tag for screensaver.js."
+          exit 1
+        fi
+        # An IIFE bundle opens with "(". Compared via grep rather than [ ] because a
+        # bare paren is a test operator in some shells and the check passes silently.
+        if ! head -c 1 dist/screensaver.js | grep -qF '('; then
+          echo "ERROR: dist/screensaver.js does not look like an IIFE bundle."
+          echo "Check build.rollupOptions.output.format in vite.config.js."
+          exit 1
+        fi
+        echo "  OK: plain <script> tag, IIFE bundle, no CORS-enforcing attributes."
 
   build:
     desc: Build native .saver bundle (runs setup if needed)

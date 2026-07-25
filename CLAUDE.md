@@ -25,9 +25,15 @@ task kill-processes  # Clear cached screensaver processes after rebuilding
 
 Individual build steps:
 ```bash
-task setup        # Build web assets with Vite (npm install + vite build)
-task build        # Build native .saver bundle (runs setup if needed)
+task setup              # Build web assets with Vite (npm ci + vite build + verify)
+task build              # Build native .saver bundle (runs setup if needed)
+task verify-web-assets  # Assert the built HTML still loads from a file:// URL
 ```
+
+`task setup` uses `npm ci`, not `npm install`: the engine is a git dependency pinned to a
+commit in `package.json`, and only the lockfile makes a build reproducible. Bumping the
+engine is a deliberate step — `npm install <repo>#<sha> --save` — because Renovate cannot
+propose updates for a git dependency pinned to a raw commit.
 
 CI runs on GitHub Actions (`.github/workflows/ci.yml`) on push/PR to `main` — builds the native bundle and verifies the output structure.
 
@@ -97,7 +103,15 @@ if webView.responds(to: selector) {
 This fix was discovered in the [WebViewScreenSaver project](https://github.com/liquidx/webviewscreensaver/commit/827156642601ac6ce1fbe2b632e8d6d424bcbbd3).
 
 ### Script Tags Must Not Use `type="module"` (file:// CORS Issue)
-WKWebView loaded via `loadFileURL` uses `file://` origins. ES module scripts (`<script type="module">`) enforce CORS, which silently fails on `file://` — JavaScript never executes and the screen is blank with no errors in logs. The Vite build config includes a `fileUrlCompatPlugin` that strips `type="module"` and `crossorigin` from the output HTML and uses `format: 'iife'` for the JS bundle. After any Vite upgrade, verify `dist/index.html` has a plain `<script>` tag.
+WKWebView loaded via `loadFileURL` uses `file://` origins. ES module scripts (`<script type="module">`) enforce CORS, which silently fails on `file://` — JavaScript never executes and the screen is blank with no errors in logs. The Vite build config includes a `fileUrlCompatPlugin` that strips `type="module"` and `crossorigin` from the output HTML and uses `format: 'iife'` for the JS bundle.
+
+This is enforced rather than remembered: `task verify-web-assets` (run automatically by
+`task setup`, and again against the shipped bundle in CI) fails the build if the HTML
+regains `type="module"`/`crossorigin` or the JS stops being an IIFE.
+
+Note `fileUrlCompatPlugin` is `apply: 'build'`. The dev server serves over `http://` and
+genuinely needs the module script — stripping it there breaks `task dev` with
+"Cannot use import statement outside a module".
 
 ### What Does NOT Work (macOS 15+)
 The following private WKPreferences APIs throw `NSUnknownKeyException` and will crash the screensaver:

@@ -32,5 +32,19 @@ jobs:
           test -f dist/EarthboundScreensaver.saver/Contents/Resources/Resources/index.html
           test -f dist/EarthboundScreensaver.saver/Contents/Resources/Resources/screensaver.js
 
+      # A Vite upgrade reintroducing type="module" blanks the screensaver with no
+      # error of any kind, so assert it on the HTML that actually ships in the bundle.
+      - name: Verify file:// compatibility of shipped bundle
+        run: |
+          HTML=dist/EarthboundScreensaver.saver/Contents/Resources/Resources/index.html
+          if grep -qE 'type="module"|crossorigin' "$HTML"; then
+            echo "ERROR: shipped index.html contains type=\"module\" or crossorigin."
+            echo "Module scripts enforce CORS, which fails silently on file:// origins."
+            grep -nE 'type="module"|crossorigin' "$HTML"
+            exit 1
+          fi
+          grep -q '<script src="./screensaver.js"></script>' "$HTML"
+          echo "OK: plain <script> tag, no CORS-enforcing attributes."
+
       - name: Check code signing
         run: codesign -vvv dist/EarthboundScreensaver.saver
