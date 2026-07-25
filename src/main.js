@@ -35,6 +35,7 @@ const FPS = 30
 const FRAME_INTERVAL = 1000 / FPS
 const FRAME_SKIP = 1
 const LETTERBOX = 0    // pixels of black bar top and bottom; 0 fills the frame
+const TRANSITION_MS = 1200  // crossfade duration between backgrounds
 
 // Both layers render at half opacity so they sum to a full-brightness frame.
 // The engine's own animate() rewrites this array when a layer's entry index is
@@ -54,6 +55,13 @@ globalThis.ROM = ROM  // exposed for poking at the ROM from a browser console
 let layers = []
 const alpha = [LAYER_ALPHA, LAYER_ALPHA]
 let tick = 0
+
+// During a crossfade the outgoing pair is still rendered, so a frame holds four
+// layers. Scratch arrays, reused each frame rather than reallocated.
+let previousLayers = null
+let transitionStart = 0
+const fadeLayers = new Array(4)
+const fadeAlpha = new Array(4)
 
 let canvas = null
 let context = null
@@ -158,6 +166,11 @@ function showLayerIndicator () {
 // MARK: - Cycling
 
 function setRandomLayers () {
+  // Hand the current pair to the crossfade before replacing it. If a fade is
+  // already running its outgoing pair is simply dropped, which is only reachable
+  // at intervals shorter than TRANSITION_MS.
+  previousLayers = layers
+  transitionStart = performance.now()
   layers = [
     new BackgroundLayer(randomLayer(), ROM),
     new BackgroundLayer(randomLayer(), ROM)
@@ -180,7 +193,30 @@ function drawFrame (now) {
   // Carry the remainder forward so the frame clock doesn't drift.
   lastFrameTime = now - (elapsed % FRAME_INTERVAL)
 
-  const bitmap = renderLayers(layers, image.data, LETTERBOX, tick, alpha)
+  let active = layers
+  let activeAlpha = alpha
+
+  if (previousLayers) {
+    const p = (now - transitionStart) / TRANSITION_MS
+    if (p >= 1) {
+      previousLayers = null
+    } else {
+      // Smoothstep, so the fade eases in and out instead of starting abruptly.
+      const t = p * p * (3 - 2 * p)
+      fadeLayers[0] = previousLayers[0]
+      fadeLayers[1] = previousLayers[1]
+      fadeLayers[2] = layers[0]
+      fadeLayers[3] = layers[1]
+      // The four weights always sum to 1, so brightness holds steady across the
+      // fade - the layers blend additively, they don't composite.
+      fadeAlpha[0] = fadeAlpha[1] = LAYER_ALPHA * (1 - t)
+      fadeAlpha[2] = fadeAlpha[3] = LAYER_ALPHA * t
+      active = fadeLayers
+      activeAlpha = fadeAlpha
+    }
+  }
+
+  const bitmap = renderLayers(active, image.data, LETTERBOX, tick, activeAlpha)
   tick += FRAME_SKIP
   // renderLayers writes into the buffer we hand it and hands the same array back;
   // the copy only matters if a future engine version returns a different one.
@@ -233,6 +269,7 @@ function stop () {
   clearTimeout(indicatorTimeoutId)
   indicatorTimeoutId = null
   layers = []
+  previousLayers = null
 }
 
 window.addEventListener('pagehide', stop)

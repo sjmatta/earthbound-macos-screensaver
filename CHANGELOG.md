@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   uses `npm ci`.
 
 ### Added
+- Backgrounds now crossfade over 1.2s instead of cutting instantly.
 - `task verify-web-assets` asserts the built HTML still loads from a `file://` URL; CI runs
   the same check against the shipped bundle so a Vite upgrade can't silently blank the screen.
 - `window.setCycleInterval(seconds)` and `window.stopScreensaver()` native bridge functions.

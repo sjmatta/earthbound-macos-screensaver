@@ -56,6 +56,11 @@ Two-layer system: JavaScript rendering wrapped in a native macOS screensaver bun
 
 Layer opacity is fixed at 0.5/0.5 in `main.js` and never mutated. Keep it that way.
 
+Backgrounds crossfade rather than cutting, so a frame mid-transition renders **four**
+layers — the outgoing pair plus the incoming pair. The engine blends layers additively
+(it does not composite), so the four weights are kept summing to 1; anything else makes
+the picture visibly dim or blow out partway through the fade.
+
 **Native Layer** (`native/EarthboundScreensaver/`):
 - `EarthboundScreensaverView.swift` - Main screensaver view, hosts WKWebView, passes settings as URL query params
 - `ConfigureSheetController.swift` - Settings UI (cycle interval, show layer names), communicates changes to JS via `webView.evaluateJavaScript`
