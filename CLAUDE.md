@@ -55,7 +55,16 @@ Layer opacity is fixed at 0.5/0.5 in `main.js` and never mutated. Keep it that w
 - `ConfigureSheetController.swift` - Settings UI (cycle interval, show layer names), communicates changes to JS via `webView.evaluateJavaScript`
 - Loads bundled HTML/JS via `loadFileURL(_:allowingReadAccessTo:)`
 
-**Native ↔ Web bridge**: Native code passes `?interval=N&showLayerNames=bool` on initial load. Runtime updates call `window.setShowLayerNames(bool)` via `evaluateJavaScript`.
+**Native ↔ Web bridge**: Native code passes `?interval=N&showLayerNames=bool` on initial
+load. Runtime updates go through functions `main.js` hangs off `window`:
+- `window.setShowLayerNames(bool)`
+- `window.setCycleInterval(seconds)`
+- `window.stopScreensaver()` — cancels the render loop and all timers
+
+`applySettings()` only calls these once the page has loaded (tracked by `isContentLoaded`,
+set in the `didFinish` navigation callback). Content loads in `startAnimation()`, so the
+configure sheet can be dismissed before there is any page to talk to; in that case the
+new values are picked up from the query string on the next load.
 
 **URL Parameters** (for dev/browser testing):
 - `interval` — seconds between background changes (default: 60)

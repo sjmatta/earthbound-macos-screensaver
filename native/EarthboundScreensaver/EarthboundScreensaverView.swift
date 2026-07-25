@@ -13,6 +13,9 @@ private let logger = OSLog(subsystem: "com.sjmatta.earthbound-screensaver", cate
 
 class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
     private var webView: WKWebView!
+    private var isPreviewInstance: Bool = false
+    private var isContentLoaded: Bool = false
+    private var pendingExit: DispatchWorkItem?
     private lazy var sheetController: ConfigureSheetController = {
         let controller = ConfigureSheetController()
         controller.onSettingsChanged = { [weak self] in
@@ -23,14 +26,66 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
 
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
-        os_log("EarthboundScreensaver init - isPreview: %{public}@", log: logger, type: .info, String(isPreview))
+        self.isPreviewInstance = isPreview
+        os_log("EarthboundScreensaver init - isPreview: %{public}@", log: logger, type: .default, String(isPreview))
         setupWebView()
+        registerScreensaverLifecycleObservers()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        os_log("EarthboundScreensaver init from coder", log: logger, type: .info)
+        os_log("EarthboundScreensaver init from coder", log: logger, type: .default)
         setupWebView()
+        registerScreensaverLifecycleObservers()
+    }
+
+    deinit {
+        DistributedNotificationCenter.default().removeObserver(self)
+        pendingExit?.cancel()
+    }
+
+    // macOS Sonoma+ FRAMEWORK BUG: stopAnimation() is only called for the System
+    // Settings preview thumbnail, NEVER when the user dismisses the real screensaver.
+    // The framework leaves the view alive, so with occlusion detection disabled the
+    // WKWebView render loop runs forever, pinning WindowServer and breaking system-wide
+    // hover/mouse-event delivery. The reliable dismissal signal is the distributed
+    // notification com.apple.screensaver.willstop (same approach Aerial uses).
+    // Refs: wadetregaskis.com/how-to-make-a-macos-screen-saver, Apple DevForums 738547.
+    private func registerScreensaverLifecycleObservers() {
+        // The preview thumbnail uses normal start/stopAnimation, so skip this there.
+        guard !isPreviewInstance else { return }
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(screensaverWillStop(_:)),
+            name: Notification.Name("com.apple.screensaver.willstop"),
+            object: nil
+        )
+    }
+
+    @objc private func screensaverWillStop(_ notification: Notification) {
+        os_log("com.apple.screensaver.willstop received — blanking WebView, exiting host in 2s", log: logger, type: .default)
+        // Blank immediately so the render loop stops right now (instant CPU relief).
+        blankWebView()
+        // Then terminate the legacyScreenSaver host so nothing can linger. Aerial found
+        // that an IMMEDIATE exit(0) can crash the screensaver engine on macOS 14+; a
+        // short delay lets the engine finish its own teardown first. macOS relaunches
+        // the host fresh on the next activation. Ref: JohnCoates/Aerial issue #1341.
+        //
+        // The exit is cancellable: if the screensaver re-engages inside that window
+        // (fast unlock-then-relock, or one display waking while another sleeps),
+        // startAnimation() cancels it so we don't kill the fresh session.
+        let exitWork = DispatchWorkItem {
+            os_log("Exiting legacyScreenSaver host now", log: logger, type: .default)
+            exit(0)
+        }
+        pendingExit = exitWork
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: exitWork)
+    }
+
+    private func blankWebView() {
+        isContentLoaded = false
+        webView?.stopLoading()
+        webView?.loadHTMLString("", baseURL: nil)
     }
 
     private func setupWebView() {
@@ -57,7 +112,8 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
 
         addSubview(webView)
 
-        loadScreensaver()
+        // Content is loaded in startAnimation() so the render loop only runs
+        // while the screensaver is actually on screen. See stopAnimation().
     }
 
     private func loadScreensaver() {
@@ -84,6 +140,7 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
 
             // Allow read access to the entire bundle to ensure all resources can load
             let bundleURL = bundle.bundleURL
+            isContentLoaded = false
             webView.loadFileURL(urlWithParams, allowingReadAccessTo: bundleURL)
         } else {
             os_log("ERROR: Could not find index.html in Resources", log: logger, type: .error)
@@ -91,11 +148,23 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
     }
 
     private func applySettings() {
-        let showLayerNames = sheetController.showLayerNames
-        os_log("Applying settings: showLayerNames=%{public}@", log: logger, type: .info, String(showLayerNames))
+        // Content is loaded in startAnimation(), so the configure sheet can be dismissed
+        // before there is any page to talk to. The new values are picked up from the
+        // query string on the next load, so there is nothing to do yet.
+        guard isContentLoaded else {
+            os_log("Settings changed before content loaded; will apply on next load", log: logger, type: .info)
+            return
+        }
 
-        // Update JavaScript via exposed function
-        let js = "window.setShowLayerNames(\(showLayerNames));"
+        let showLayerNames = sheetController.showLayerNames
+        let interval = sheetController.interval
+        os_log("Applying settings: showLayerNames=%{public}@, interval=%{public}d", log: logger, type: .info, String(showLayerNames), interval)
+
+        // Update JavaScript via exposed functions
+        let js = """
+        window.setShowLayerNames(\(showLayerNames));
+        window.setCycleInterval(\(interval));
+        """
         webView.evaluateJavaScript(js) { _, error in
             if let error = error {
                 os_log("Failed to apply settings: %{public}@", log: logger, type: .error, error.localizedDescription)
@@ -105,7 +174,9 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
 
     // WKNavigationDelegate methods
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        os_log("WebView finished loading", log: logger, type: .info)
+        // about:blank from blankWebView() also lands here; it has no bridge to call.
+        isContentLoaded = webView.url?.isFileURL == true
+        os_log("WebView finished loading (contentLoaded: %{public}@)", log: logger, type: .info, String(isContentLoaded))
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -128,10 +199,28 @@ class EarthboundScreensaverView: ScreenSaverView, WKNavigationDelegate {
         return self
     }
 
-    // Lifecycle: stop WebView when screensaver stops to prevent resource leaks
+    // Lifecycle: (re)load content when the screensaver becomes active so the
+    // animation loop starts fresh each session.
+    override func startAnimation() {
+        super.startAnimation()
+        // A dismissal may have scheduled a host exit that hasn't fired yet; this
+        // session supersedes it. See screensaverWillStop.
+        if pendingExit != nil {
+            os_log("Screensaver re-engaged — cancelling pending host exit", log: logger, type: .default)
+            pendingExit?.cancel()
+            pendingExit = nil
+        }
+        loadScreensaver()
+        os_log("EarthboundScreensaver started", log: logger, type: .default)
+    }
+
+    // NOTE: On macOS Sonoma+ this is only called for the System Settings preview
+    // thumbnail — never on real dismissal (see registerScreensaverLifecycleObservers
+    // / screensaverWillStop, which handle the real screensaver). Blanking here keeps
+    // the preview from rendering in the background after the settings pane closes.
     override func stopAnimation() {
         super.stopAnimation()
-        webView?.stopLoading()
-        os_log("EarthboundScreensaver stopped", log: logger, type: .info)
+        blankWebView()
+        os_log("EarthboundScreensaver stopAnimation (preview) — WebView blanked", log: logger, type: .default)
     }
 }
