@@ -36,9 +36,19 @@ CI runs on GitHub Actions (`.github/workflows/ci.yml`) on push/PR to `main` — 
 Two-layer system: JavaScript rendering wrapped in a native macOS screensaver bundle.
 
 **Web Layer** (`src/`):
-- `main.js` - Initializes the Earthbound Battle Backgrounds engine, randomly cycles through 327 layer combinations
+- `main.js` - Owns the render loop, randomly cycling through 327 layer combinations
 - Uses `earthbound-battle-backgrounds` npm package for rendering
 - Vite bundles everything into a single `screensaver.js` file (IIFE format)
+
+`main.js` deliberately does **not** call the engine's `Engine.animate()`. It drives
+`renderLayers()` itself, for two reasons:
+1. `animate()` offers no way to stop — it keeps a module-private `frameID` and there is
+   no cancel API, so the loop outlives any attempt to shut it down.
+2. `animate()` rewrites the layer alpha array when a layer's `entry` index is falsy.
+   Index 0 is a perfectly valid background, so a session that randomly drew layer 0
+   would get stuck rendering a single layer at full opacity for its entire lifetime.
+
+Layer opacity is fixed at 0.5/0.5 in `main.js` and never mutated. Keep it that way.
 
 **Native Layer** (`native/EarthboundScreensaver/`):
 - `EarthboundScreensaverView.swift` - Main screensaver view, hosts WKWebView, passes settings as URL query params
@@ -50,8 +60,13 @@ Two-layer system: JavaScript rendering wrapped in a native macOS screensaver bun
 **URL Parameters** (for dev/browser testing):
 - `interval` — seconds between background changes (default: 60)
 - `showLayerNames` — show/hide layer name indicator (default: true)
-- `layer1` / `layer2` — pin specific layer indices (0–326)
-- `debug` — enable debug overlay
+- `layer1` / `layer2` — pin specific layer indices (0–326); pinned layers do not cycle
+- `debug` — keep the layer indicator on screen permanently
+
+**Layer indicator text**: names come from `src/layerNames.json` when an index is listed
+there. That table has to be compiled by hand and is currently empty, so in practice every
+layer falls back to a description derived from the ROM — index plus distortion style, e.g.
+`#019 Interlaced`. Adding entries to `layerNames.json` overrides the fallback per index.
 
 **Build Output**: `dist/EarthboundScreensaver.saver` - self-contained macOS screensaver bundle
 

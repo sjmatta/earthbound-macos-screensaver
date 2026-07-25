@@ -1,4 +1,4 @@
 {
-  "_comment": "Layer index to name mapping. Add entries as 'index': 'Enemy/Location Name'",
+  "_comment": "Optional name overrides for the layer indicator, keyed by layer index 0-326 as 'index': 'Enemy/Location Name'. Indices not listed here fall back to a description derived from the ROM (index + distortion style), so this table can be filled in a few entries at a time.",
   "_reference": "https://datacrystal.tcrf.net/wiki/EarthBound/Battle_Group_BG_Association_Table"
 }
