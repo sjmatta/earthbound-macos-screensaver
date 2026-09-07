@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — background fidelity and Studio
+
+- Add source-backed original pairings, encounter labels, gallery thumbnails, favorites/exclusions, and Authentic/Remix collections.
+- Implement deterministic 60 Hz state, scrolling and distortion sequences, integer scanline transforms, palette timing, and 5-bit color math.
+- Add 4:3, source-pixel, and fill scaling; crossfade completed Remix frames.
+- Add shared native preview and experimental private-API extension targets.
+- Fix DOM-ready classic-script startup, correctly type the legacy occlusion call, and coordinate delayed exits across legacy views.
+- Add renderer/startup tests, Swift lifecycle tests, capture/comparison tools, and macOS CI build coverage.
+- Update Vite to 8.2.2 and harden dependency/asset/build freshness checks.
+- Document that emulator-frame validation, scripted battle effects, and full extension host certification remain outstanding.
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),

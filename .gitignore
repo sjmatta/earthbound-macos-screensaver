@@ -20,3 +20,9 @@ Thumbs.db
 # Task (taskfile.dev) cache
 .task/
 node_modules/
+
+# Local visual checks
+/output/
+/.playwright-cli/
+/native/**/*.xcuserstate
+/native/**/xcuserdata/

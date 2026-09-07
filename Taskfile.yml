@@ -51,6 +51,8 @@ tasks:
       - src/**/*
       - vite.config.js
       - package.json
+      - package-lock.json
+      - Taskfile.yml
     generates:
       - dist/index.html
       - dist/screensaver.js
@@ -83,7 +85,7 @@ tasks:
 
   build:
     desc: Build native .saver bundle (runs setup if needed)
-    deps: [ensure-web-assets]
+    deps: [setup]
     preconditions:
       - sh: command -v xcodebuild
         msg: "Xcode is required. Install from App Store or run: xcode-select --install"
@@ -95,8 +97,9 @@ tasks:
       - cp dist/index.html native/{{.SAVER_NAME}}/Resources/
       - cp dist/screensaver.js native/{{.SAVER_NAME}}/Resources/
       - cp -R dist/assets native/{{.SAVER_NAME}}/Resources/
+      - cp NOTICES native/{{.SAVER_NAME}}/Resources/NOTICES.txt
       - echo "Building native screensaver..."
-      - cd native && xcodebuild -project {{.SAVER_NAME}}.xcodeproj -target {{.SAVER_NAME}} -configuration Release CODE_SIGN_IDENTITY="-" 2>&1 | grep -E "(Building|Compiling|Linking|error:|warning:|BUILD)" || true
+      - cd native && xcodebuild -quiet -project {{.SAVER_NAME}}.xcodeproj -target {{.SAVER_NAME}} -configuration Release CODE_SIGN_IDENTITY="-"
       - test -d native/build/Release/{{.SAVER_NAME}}.saver
       - echo "Copying to dist..."
       - cp -R native/build/Release/{{.SAVER_NAME}}.saver dist/
@@ -104,21 +107,41 @@ tasks:
       - echo "=== Build Complete ==="
       - echo "Output{{":"}} dist/{{.SAVER_NAME}}.saver"
     sources:
+      - NOTICES
       - native/{{.SAVER_NAME}}/**/*.swift
       - native/{{.SAVER_NAME}}/**/*.plist
-      - dist/**/*
+      - native/{{.SAVER_NAME}}.xcodeproj/project.pbxproj
+      - Taskfile.yml
+      - dist/index.html
+      - dist/screensaver.js
+      - dist/assets/**/*
     generates:
       - dist/{{.SAVER_NAME}}.saver/**/*
 
-  ensure-web-assets:
-    desc: Build web assets if not present
-    internal: true
-    status:
-      - test -f dist/index.html
-      - test -f dist/screensaver.js
-      - test -d dist/assets
+  build:studio:
+    desc: Build the preview app and experimental app-extension host (macOS 14+)
+    deps: [build]
     cmds:
-      - task: setup
+      - xcodebuild -quiet -project native/EarthboundStudio.xcodeproj -scheme EarthboundStudio -configuration Release -destination 'generic/platform=macOS' -derivedDataPath native/build/studio CODE_SIGN_IDENTITY="-"
+      - rm -rf dist/EarthboundStudio.app
+      - cp -R native/build/studio/Build/Products/Release/EarthboundStudio.app dist/
+      - codesign --verify --strict --deep dist/EarthboundStudio.app
+
+  preview:
+    desc: Build and open the standalone background studio
+    deps: [build:studio]
+    cmds:
+      - open dist/EarthboundStudio.app
+
+  test:
+    desc: Run deterministic renderer and selection tests
+    cmds:
+      - npm test
+
+  project:studio:
+    desc: Regenerate the committed Studio project after editing native/studio.yml
+    cmds:
+      - xcodegen generate --spec native/studio.yml
 
   # =============================================================================
   # Installation

@@ -1,72 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Earthbound Battle Backgrounds Screensaver</title>
-    <style>
-      @font-face {
-        font-family: 'Press Start 2P';
-        src: url('./fonts/PressStart2P-Regular.woff2') format('woff2');
-        font-display: swap;
-      }
-
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #000;
-      }
-      canvas {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-      }
-
-      /* Earthbound-style dialog box */
-      .eb-window {
-        position: fixed;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #000;
-        color: #f3edae;
-        font-family: 'Press Start 2P', monospace;
-        font-size: 12px;
-        padding: 16px 24px;
-        border-radius: 8px;
-        box-shadow:
-          0 0 0 4px #383050,
-          0 0 0 8px #5858a8,
-          0 0 0 10px #8888c8;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-        z-index: 100;
-        pointer-events: none;
-        white-space: nowrap;
-      }
-
-      .eb-window.visible {
-        opacity: 1;
-      }
-
-      .eb-window .separator {
-        margin: 0 12px;
-        color: #8888c8;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="main"></canvas>
-    <div id="layer-indicator" class="eb-window">
-      <span id="layer1-name">Layer 0</span>
-      <span class="separator">×</span>
-      <span id="layer2-name">Layer 0</span>
-    </div>
-    <script type="module" src="./main.js"></script>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>EarthBound — Battle Backgrounds</title>
+<style>
+@font-face {font-family:Earthbound;src:url('./fonts/PressStart2P-Regular.woff2') format('woff2');font-display:swap}
+* {box-sizing:border-box} body {margin:0;background:#080910;color:#eeedf5;font:14px -apple-system,BlinkMacSystemFont,sans-serif}
+#stage {position:relative;width:100vw;height:100vh;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#main {image-rendering:pixelated;image-rendering:crisp-edges}
+#layer-indicator {position:absolute;bottom:28px;left:50%;transform:translateX(-50%);max-width:90%;background:#0c0c16e8;border:2px solid #9591ca;box-shadow:0 0 0 3px #333054;border-radius:8px;padding:16px 22px;text-align:center;opacity:0;transition:opacity .4s;pointer-events:none}
+#layer-indicator.visible {opacity:1} #scene-name {font:10px/1.8 Earthbound,monospace} #scene-detail {font-size:11px;color:#bab8d1;margin-top:7px}
+header,aside {display:none} .preview header,.preview aside {display:block} .preview #stage {height:54vh;min-height:260px;width:100%}
+header {padding:22px 28px;background:#151422;border-bottom:1px solid #343047} h1 {font:15px/1.7 Earthbound,monospace;margin:0 0 18px} .controls {display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+label {display:flex;gap:7px;align-items:center} select,input,button {font:inherit;color:inherit;background:#282538;border:1px solid #514b69;border-radius:6px;padding:7px} button {cursor:pointer} button:hover {background:#423b5c} button:focus-visible,input:focus-visible,select:focus-visible {outline:2px solid #ded09c;outline-offset:2px} input[type=number] {width:64px}
+aside {padding:24px 28px} #search {width:100%;margin:12px 0 20px} #gallery {display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px} article {background:#151422;border-radius:8px;padding:10px} article .scene {width:100%;border:0;background:none;padding:0;text-align:left} .scene canvas {width:100%;aspect-ratio:4/3;image-rendering:pixelated;border-radius:4px;background:black} .scene span {display:block;min-height:45px;margin-top:10px;line-height:1.5} article>button {margin:8px 6px 0 0;font-size:12px} #status {color:#decfa3;font-size:12px;margin:12px 0 0} .hint {color:#aaa5ba;line-height:1.6;font-size:12px}
+</style>
+</head>
+<body>
+<header><h1>EarthBound Battle Backgrounds</h1><div class="controls">
+<label>Collection <select id="mode"><option value="authentic">Authentic pairings</option><option value="remix">Remix</option></select></label>
+<label>Display <select id="scale"><option value="4:3">4:3 display</option><option value="pixels">Source pixels</option><option value="fill">Fill screen</option></select></label>
+<label>Change every <input id="interval" type="number" min="5" max="300"> seconds</label>
+<label><input id="showLayerNames" type="checkbox"> Names</label><label><input id="favoritesOnly" type="checkbox"> Favorites only</label>
+<button id="next">Next background</button>
+</div><p id="status" role="status"></p></header>
+<main id="stage"><canvas id="main" aria-label="Animated EarthBound battle background"></canvas><div id="layer-indicator"><div id="scene-name"></div><div id="scene-detail"></div></div></main>
+<aside><h2>Find your favorites</h2><p class="hint">Choose a background to hold it in the preview. Next background resumes the rotation. Authentic uses the original battle pairings; Remix adds random combinations and soft transitions.</p><input id="search" type="search" aria-label="Search backgrounds" placeholder="Search enemies or background numbers…"><div id="gallery"></div></aside>
+<script type="module" src="./main.js"></script>
+</body></html>

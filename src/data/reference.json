@@ -1,0 +1,4731 @@
+{
+  "source": "https://github.com/Herringway/ebsrc",
+  "commit": "0197d6c13ef11ad3280e9388e08a646ab1030d15",
+  "files": {
+    "src/data/battle/backgrounds/scrolling_table.asm": "8fb8b5b58c854464c4e406f25e4c4515ee83fe811361c8bf68ceef89f9c41242",
+    "src/data/sine_table.asm": "6917b0fe03f6d6ad6e73fcefd7248c96ccd48423e24c82a2d2fa02136e283aee",
+    "src/data/battle/background_layer_table.asm": "5c22b8cc44cef99fb0b6fc1e49214f172cf923475b00428566dd5970d9b3abfa",
+    "src/data/map/battle_groups_table.asm": "514654ef33512ee29dd57da95ac7a1ac4e0fe641450cf2ef216328588362ad11",
+    "include/constants/battlebgs.asm": "25ee2b1ac66a221f1ebb4a9294e4bb78e9e5b9002e537e7ba6e6c6ba7d7df078",
+    "include/structs.asm": "e8bd4f5755ea73610b8e44cfe6e5018143d5a8e589a850fde81fe459bcffce4c",
+    "src/misc/battlebgs/generate_frame.asm": "e076d4397eeb74f0c39e7a6ba9a00704c1bbb380c9d308c41c706d226df22c4c",
+    "src/misc/battlebgs/prepare_bg_offset_tables.asm": "42b3bd924f1778a24ab78abfd2fcc02af9f9fc600ee51e1859ba6ee11f3c7c2b",
+    "src/battle/load_battlebg.asm": "33b754c6c5d2a8cf796440e91f4ddabbf3c72650716786c3595f5a75c3e13fb8",
+    "src/unknown/C2/C2CFE5.asm": "5af519b2fda8822ff12e0861c184b1116a6f9818b69a503edd8c4a3ed466045c"
+  },
+  "scrolling": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      180,
+      65280,
+      256,
+      0,
+      0
+    ],
+    [
+      180,
+      256,
+      256,
+      0,
+      0
+    ],
+    [
+      180,
+      256,
+      65280,
+      0,
+      0
+    ],
+    [
+      180,
+      65280,
+      65280,
+      0,
+      0
+    ],
+    [
+      60,
+      0,
+      65280,
+      0,
+      8
+    ],
+    [
+      0,
+      65280,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      256,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      256,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      65280,
+      0,
+      0
+    ],
+    [
+      0,
+      256,
+      65280,
+      0,
+      0
+    ],
+    [
+      0,
+      256,
+      256,
+      0,
+      0
+    ],
+    [
+      0,
+      65280,
+      256,
+      0,
+      0
+    ],
+    [
+      0,
+      65280,
+      65280,
+      0,
+      0
+    ],
+    [
+      0,
+      128,
+      65280,
+      0,
+      0
+    ],
+    [
+      0,
+      256,
+      65408,
+      0,
+      0
+    ],
+    [
+      0,
+      256,
+      128,
+      0,
+      0
+    ],
+    [
+      0,
+      128,
+      256,
+      0,
+      0
+    ],
+    [
+      0,
+      65408,
+      256,
+      0,
+      0
+    ],
+    [
+      0,
+      65280,
+      128,
+      0,
+      0
+    ],
+    [
+      0,
+      65280,
+      65408,
+      0,
+      0
+    ],
+    [
+      0,
+      65408,
+      65280,
+      0,
+      0
+    ],
+    [
+      0,
+      65408,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      128,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      128,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      65408,
+      0,
+      0
+    ],
+    [
+      0,
+      128,
+      65408,
+      0,
+      0
+    ],
+    [
+      0,
+      128,
+      128,
+      0,
+      0
+    ],
+    [
+      0,
+      65408,
+      128,
+      0,
+      0
+    ],
+    [
+      0,
+      65408,
+      65408,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      65408,
+      0,
+      0
+    ],
+    [
+      0,
+      128,
+      65472,
+      0,
+      0
+    ],
+    [
+      0,
+      128,
+      64,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      128,
+      0,
+      0
+    ],
+    [
+      0,
+      65472,
+      128,
+      0,
+      0
+    ],
+    [
+      0,
+      65408,
+      64,
+      0,
+      0
+    ],
+    [
+      0,
+      65408,
+      65472,
+      0,
+      0
+    ],
+    [
+      0,
+      65472,
+      65408,
+      0,
+      0
+    ],
+    [
+      0,
+      65472,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      64,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      65472,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      65472,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      64,
+      0,
+      0
+    ],
+    [
+      0,
+      65472,
+      64,
+      0,
+      0
+    ],
+    [
+      0,
+      65472,
+      65472,
+      0,
+      0
+    ],
+    [
+      0,
+      32,
+      65472,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      65504,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      32,
+      0,
+      0
+    ],
+    [
+      0,
+      32,
+      64,
+      0,
+      0
+    ],
+    [
+      0,
+      65504,
+      64,
+      0,
+      0
+    ],
+    [
+      0,
+      65472,
+      32,
+      0,
+      0
+    ],
+    [
+      0,
+      65472,
+      65504,
+      0,
+      0
+    ],
+    [
+      0,
+      65504,
+      65472,
+      0,
+      0
+    ],
+    [
+      120,
+      120,
+      0,
+      65535,
+      0
+    ],
+    [
+      120,
+      65416,
+      0,
+      1,
+      0
+    ],
+    [
+      60,
+      65476,
+      65476,
+      1,
+      1
+    ],
+    [
+      60,
+      60,
+      65476,
+      65535,
+      1
+    ],
+    [
+      240,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      240,
+      240,
+      0,
+      65535,
+      0
+    ],
+    [
+      480,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      480,
+      480,
+      0,
+      65535,
+      0
+    ],
+    [
+      5,
+      512,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      65024,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      512,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      65024,
+      0,
+      0
+    ],
+    [
+      5,
+      1024,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      64512,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      1024,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      64512,
+      0,
+      0
+    ],
+    [
+      90,
+      128,
+      32,
+      65535,
+      0
+    ],
+    [
+      90,
+      65408,
+      32,
+      1,
+      0
+    ],
+    [
+      120,
+      0,
+      256,
+      0,
+      65534
+    ],
+    [
+      120,
+      0,
+      16,
+      0,
+      2
+    ],
+    [
+      60,
+      96,
+      32,
+      0,
+      0
+    ],
+    [
+      60,
+      96,
+      65504,
+      0,
+      0
+    ],
+    [
+      120,
+      65408,
+      65408,
+      0,
+      0
+    ],
+    [
+      120,
+      65472,
+      65472,
+      0,
+      0
+    ],
+    [
+      128,
+      256,
+      256,
+      65535,
+      65535
+    ],
+    [
+      128,
+      128,
+      65408,
+      1,
+      65535
+    ],
+    [
+      128,
+      65280,
+      65280,
+      1,
+      1
+    ],
+    [
+      128,
+      65408,
+      128,
+      65535,
+      1
+    ],
+    [
+      128,
+      0,
+      64,
+      0,
+      0
+    ],
+    [
+      128,
+      0,
+      65472,
+      0,
+      0
+    ],
+    [
+      256,
+      16,
+      64,
+      0,
+      0
+    ],
+    [
+      256,
+      65520,
+      65472,
+      0,
+      0
+    ],
+    [
+      1920,
+      32,
+      0,
+      0,
+      0
+    ],
+    [
+      1920,
+      0,
+      65504,
+      0,
+      0
+    ],
+    [
+      1920,
+      65504,
+      0,
+      0,
+      0
+    ],
+    [
+      1920,
+      0,
+      32,
+      0,
+      0
+    ],
+    [
+      60,
+      0,
+      60,
+      0,
+      65535
+    ],
+    [
+      60,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      256,
+      1024,
+      0,
+      65532,
+      0
+    ],
+    [
+      512,
+      0,
+      0,
+      2,
+      0
+    ],
+    [
+      120,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      64,
+      128,
+      0,
+      0
+    ],
+    [
+      720,
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      720,
+      720,
+      720,
+      65535,
+      65535
+    ],
+    [
+      720,
+      0,
+      0,
+      65535,
+      1
+    ],
+    [
+      720,
+      64816,
+      720,
+      1,
+      65535
+    ],
+    [
+      1636,
+      64,
+      65472,
+      0,
+      0
+    ],
+    [
+      835,
+      64,
+      64,
+      0,
+      0
+    ],
+    [
+      835,
+      65472,
+      64,
+      0,
+      0
+    ],
+    [
+      1200,
+      65472,
+      65472,
+      0,
+      0
+    ],
+    [
+      1920,
+      128,
+      0,
+      0,
+      0
+    ],
+    [
+      1920,
+      0,
+      65408,
+      0,
+      0
+    ],
+    [
+      1920,
+      65408,
+      0,
+      0,
+      0
+    ],
+    [
+      1920,
+      0,
+      128,
+      0,
+      0
+    ],
+    [
+      180,
+      96,
+      32,
+      0,
+      0
+    ],
+    [
+      180,
+      96,
+      65504,
+      0,
+      0
+    ],
+    [
+      500,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      500,
+      500,
+      0,
+      65535,
+      0
+    ],
+    [
+      400,
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      400,
+      400,
+      400,
+      65535,
+      65535
+    ],
+    [
+      400,
+      0,
+      0,
+      65535,
+      1
+    ],
+    [
+      400,
+      65136,
+      400,
+      1,
+      65535
+    ],
+    [
+      240,
+      65408,
+      128,
+      0,
+      0
+    ],
+    [
+      180,
+      128,
+      128,
+      0,
+      0
+    ],
+    [
+      240,
+      128,
+      65408,
+      0,
+      0
+    ],
+    [
+      180,
+      65408,
+      65408,
+      0,
+      0
+    ]
+  ],
+  "sine": [
+    0,
+    3,
+    6,
+    9,
+    12,
+    15,
+    18,
+    21,
+    24,
+    28,
+    31,
+    34,
+    37,
+    40,
+    43,
+    46,
+    48,
+    51,
+    54,
+    57,
+    60,
+    63,
+    65,
+    68,
+    71,
+    73,
+    76,
+    78,
+    81,
+    83,
+    85,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    109,
+    111,
+    112,
+    114,
+    115,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    124,
+    125,
+    126,
+    126,
+    127,
+    127,
+    127,
+    127,
+    127,
+    127,
+    127,
+    127,
+    127,
+    127,
+    127,
+    126,
+    126,
+    125,
+    124,
+    124,
+    123,
+    122,
+    121,
+    120,
+    119,
+    118,
+    117,
+    115,
+    114,
+    112,
+    111,
+    109,
+    108,
+    106,
+    104,
+    102,
+    100,
+    98,
+    96,
+    94,
+    92,
+    90,
+    88,
+    85,
+    83,
+    81,
+    78,
+    76,
+    73,
+    71,
+    68,
+    65,
+    63,
+    60,
+    57,
+    54,
+    51,
+    48,
+    46,
+    43,
+    40,
+    37,
+    34,
+    31,
+    28,
+    24,
+    21,
+    18,
+    15,
+    12,
+    9,
+    6,
+    3,
+    0,
+    253,
+    250,
+    247,
+    244,
+    241,
+    238,
+    235,
+    232,
+    228,
+    225,
+    222,
+    219,
+    216,
+    213,
+    210,
+    208,
+    205,
+    202,
+    199,
+    196,
+    193,
+    191,
+    188,
+    185,
+    183,
+    180,
+    178,
+    175,
+    173,
+    171,
+    168,
+    166,
+    164,
+    162,
+    160,
+    158,
+    156,
+    154,
+    152,
+    150,
+    148,
+    147,
+    145,
+    144,
+    142,
+    141,
+    139,
+    138,
+    137,
+    136,
+    135,
+    134,
+    133,
+    132,
+    132,
+    131,
+    130,
+    130,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    130,
+    130,
+    131,
+    132,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    141,
+    142,
+    144,
+    145,
+    147,
+    148,
+    150,
+    152,
+    154,
+    156,
+    158,
+    160,
+    162,
+    164,
+    166,
+    168,
+    171,
+    173,
+    175,
+    178,
+    180,
+    183,
+    185,
+    188,
+    191,
+    193,
+    196,
+    199,
+    202,
+    205,
+    208,
+    210,
+    213,
+    216,
+    219,
+    222,
+    225,
+    228,
+    232,
+    235,
+    238,
+    241,
+    244,
+    247,
+    250,
+    253
+  ],
+  "scenes": [
+    {
+      "id": "262:0",
+      "layers": [
+        262,
+        0
+      ],
+      "groups": [
+        1
+      ],
+      "names": [
+        "Spiteful Crow"
+      ],
+      "name": "Spiteful Crow"
+    },
+    {
+      "id": "260:0",
+      "layers": [
+        260,
+        0
+      ],
+      "groups": [
+        2
+      ],
+      "names": [
+        "Runaway Dog"
+      ],
+      "name": "Runaway Dog"
+    },
+    {
+      "id": "261:0",
+      "layers": [
+        261,
+        0
+      ],
+      "groups": [
+        3
+      ],
+      "names": [
+        "Coil Snake"
+      ],
+      "name": "Coil Snake"
+    },
+    {
+      "id": "114:0",
+      "layers": [
+        114,
+        0
+      ],
+      "groups": [
+        4
+      ],
+      "names": [
+        "Ghost Of Starman",
+        "Evil Eye"
+      ],
+      "name": "Ghost Of Starman / Evil Eye"
+    },
+    {
+      "id": "115:0",
+      "layers": [
+        115,
+        0
+      ],
+      "groups": [
+        5
+      ],
+      "names": [
+        "Ghost Of Starman",
+        "Mechanical Octobot"
+      ],
+      "name": "Ghost Of Starman / Mechanical Octobot"
+    },
+    {
+      "id": "116:0",
+      "layers": [
+        116,
+        0
+      ],
+      "groups": [
+        6
+      ],
+      "names": [
+        "Evil Eye",
+        "Mechanical Octobot"
+      ],
+      "name": "Evil Eye / Mechanical Octobot"
+    },
+    {
+      "id": "117:0",
+      "layers": [
+        117,
+        0
+      ],
+      "groups": [
+        7
+      ],
+      "names": [
+        "Ghost Of Starman",
+        "Mechanical Octobot",
+        "Evil Eye"
+      ],
+      "name": "Ghost Of Starman / Mechanical Octobot / Evil Eye"
+    },
+    {
+      "id": "5:0",
+      "layers": [
+        5,
+        0
+      ],
+      "groups": [
+        8,
+        431
+      ],
+      "names": [
+        "Skate Punk",
+        "Yes Man Junior",
+        "Pogo Punk"
+      ],
+      "name": "Skate Punk / Yes Man Junior / Pogo Punk"
+    },
+    {
+      "id": "6:0",
+      "layers": [
+        6,
+        0
+      ],
+      "groups": [
+        9,
+        433
+      ],
+      "names": [
+        "Skate Punk",
+        "Pogo Punk",
+        "Yes Man Junior"
+      ],
+      "name": "Skate Punk / Pogo Punk / Yes Man Junior"
+    },
+    {
+      "id": "7:0",
+      "layers": [
+        7,
+        0
+      ],
+      "groups": [
+        10,
+        432
+      ],
+      "names": [
+        "Pogo Punk",
+        "Yes Man Junior"
+      ],
+      "name": "Pogo Punk / Yes Man Junior"
+    },
+    {
+      "id": "8:0",
+      "layers": [
+        8,
+        0
+      ],
+      "groups": [
+        11
+      ],
+      "names": [
+        "Skate Punk",
+        "Yes Man Junior",
+        "Pogo Punk"
+      ],
+      "name": "Skate Punk / Yes Man Junior / Pogo Punk"
+    },
+    {
+      "id": "124:0",
+      "layers": [
+        124,
+        0
+      ],
+      "groups": [
+        12
+      ],
+      "names": [
+        "Runaway Dog"
+      ],
+      "name": "Runaway Dog"
+    },
+    {
+      "id": "123:0",
+      "layers": [
+        123,
+        0
+      ],
+      "groups": [
+        13
+      ],
+      "names": [
+        "Spiteful Crow"
+      ],
+      "name": "Spiteful Crow"
+    },
+    {
+      "id": "122:0",
+      "layers": [
+        122,
+        0
+      ],
+      "groups": [
+        14
+      ],
+      "names": [
+        "Gruff Goat"
+      ],
+      "name": "Gruff Goat"
+    },
+    {
+      "id": "125:0",
+      "layers": [
+        125,
+        0
+      ],
+      "groups": [
+        15,
+        17,
+        18,
+        28
+      ],
+      "names": [
+        "Lesser Mook",
+        "Whirling Robo",
+        "Wooly Shambler",
+        "Cave Boy",
+        "Mighty Bear Seven"
+      ],
+      "name": "Lesser Mook / Whirling Robo / Wooly Shambler"
+    },
+    {
+      "id": "313:0",
+      "layers": [
+        313,
+        0
+      ],
+      "groups": [
+        16
+      ],
+      "names": [
+        "Lesser Mook",
+        "Wooly Shambler"
+      ],
+      "name": "Lesser Mook / Wooly Shambler"
+    },
+    {
+      "id": "126:0",
+      "layers": [
+        126,
+        0
+      ],
+      "groups": [
+        19
+      ],
+      "names": [
+        "Spiteful Crow"
+      ],
+      "name": "Spiteful Crow"
+    },
+    {
+      "id": "127:0",
+      "layers": [
+        127,
+        0
+      ],
+      "groups": [
+        20
+      ],
+      "names": [
+        "Gruff Goat"
+      ],
+      "name": "Gruff Goat"
+    },
+    {
+      "id": "129:0",
+      "layers": [
+        129,
+        0
+      ],
+      "groups": [
+        21
+      ],
+      "names": [
+        "Runaway Dog"
+      ],
+      "name": "Runaway Dog"
+    },
+    {
+      "id": "315:0",
+      "layers": [
+        315,
+        0
+      ],
+      "groups": [
+        22,
+        23,
+        25
+      ],
+      "names": [
+        "Lesser Mook",
+        "Whirling Robo",
+        "Wooly Shambler"
+      ],
+      "name": "Lesser Mook / Whirling Robo / Wooly Shambler"
+    },
+    {
+      "id": "130:0",
+      "layers": [
+        130,
+        0
+      ],
+      "groups": [
+        24
+      ],
+      "names": [
+        "Wooly Shambler",
+        "Whirling Robo"
+      ],
+      "name": "Wooly Shambler / Whirling Robo"
+    },
+    {
+      "id": "314:0",
+      "layers": [
+        314,
+        0
+      ],
+      "groups": [
+        26
+      ],
+      "names": [
+        "Cave Boy"
+      ],
+      "name": "Cave Boy"
+    },
+    {
+      "id": "131:0",
+      "layers": [
+        131,
+        0
+      ],
+      "groups": [
+        27,
+        29
+      ],
+      "names": [
+        "Cave Boy",
+        "Mighty Bear Seven"
+      ],
+      "name": "Cave Boy / Mighty Bear Seven"
+    },
+    {
+      "id": "9:0",
+      "layers": [
+        9,
+        0
+      ],
+      "groups": [
+        30,
+        31,
+        34,
+        35,
+        41,
+        42,
+        105,
+        108
+      ],
+      "names": [
+        "Black Antoid",
+        "Ramblin Evil Mushroom",
+        "Mobile Sprout",
+        "Ranboob",
+        "Tough Mobile Sprout",
+        "Struttin Evil Mushroom"
+      ],
+      "name": "Black Antoid / Ramblin Evil Mushroom / Mobile Sprout"
+    },
+    {
+      "id": "12:0",
+      "layers": [
+        12,
+        0
+      ],
+      "groups": [
+        32
+      ],
+      "names": [
+        "Ramblin Evil Mushroom"
+      ],
+      "name": "Ramblin Evil Mushroom"
+    },
+    {
+      "id": "10:0",
+      "layers": [
+        10,
+        0
+      ],
+      "groups": [
+        33,
+        184,
+        185,
+        186
+      ],
+      "names": [
+        "Black Antoid",
+        "Ramblin Evil Mushroom",
+        "Struttin Evil Mushroom",
+        "Rowdy Mouse"
+      ],
+      "name": "Black Antoid / Ramblin Evil Mushroom / Struttin Evil Mushroom"
+    },
+    {
+      "id": "1:0",
+      "layers": [
+        1,
+        0
+      ],
+      "groups": [
+        36,
+        56,
+        57
+      ],
+      "names": [
+        "Runaway Dog",
+        "Cop",
+        "Spiteful Crow"
+      ],
+      "name": "Runaway Dog / Cop / Spiteful Crow"
+    },
+    {
+      "id": "14:0",
+      "layers": [
+        14,
+        0
+      ],
+      "groups": [
+        37,
+        38,
+        58,
+        59
+      ],
+      "names": [
+        "Cranky Lady",
+        "Annoying Old Party Man"
+      ],
+      "name": "Cranky Lady / Annoying Old Party Man"
+    },
+    {
+      "id": "269:270",
+      "layers": [
+        269,
+        270
+      ],
+      "groups": [
+        39,
+        40,
+        60
+      ],
+      "names": [
+        "Unassuming Local Guy",
+        "New Age Retro Hippie"
+      ],
+      "name": "Unassuming Local Guy / New Age Retro Hippie"
+    },
+    {
+      "id": "11:0",
+      "layers": [
+        11,
+        0
+      ],
+      "groups": [
+        43,
+        44,
+        48
+      ],
+      "names": [
+        "Mobile Sprout",
+        "Territorial Oak"
+      ],
+      "name": "Mobile Sprout / Territorial Oak"
+    },
+    {
+      "id": "21:0",
+      "layers": [
+        21,
+        0
+      ],
+      "groups": [
+        45,
+        46,
+        47,
+        106,
+        107
+      ],
+      "names": [
+        "Mobile Sprout",
+        "Lil Ufo",
+        "Tough Mobile Sprout",
+        "Ranboob"
+      ],
+      "name": "Mobile Sprout / Lil Ufo / Tough Mobile Sprout"
+    },
+    {
+      "id": "22:0",
+      "layers": [
+        22,
+        0
+      ],
+      "groups": [
+        49,
+        52
+      ],
+      "names": [
+        "Spinning Robo",
+        "Lil Ufo"
+      ],
+      "name": "Spinning Robo / Lil Ufo"
+    },
+    {
+      "id": "20:0",
+      "layers": [
+        20,
+        0
+      ],
+      "groups": [
+        50,
+        51,
+        53
+      ],
+      "names": [
+        "Lil Ufo",
+        "Mobile Sprout"
+      ],
+      "name": "Lil Ufo / Mobile Sprout"
+    },
+    {
+      "id": "16:0",
+      "layers": [
+        16,
+        0
+      ],
+      "groups": [
+        54,
+        55,
+        416,
+        417
+      ],
+      "names": [
+        "Insane Cultist"
+      ],
+      "name": "Insane Cultist"
+    },
+    {
+      "id": "3:0",
+      "layers": [
+        3,
+        0
+      ],
+      "groups": [
+        61,
+        62,
+        427
+      ],
+      "names": [
+        "Trick Or Trick Kid",
+        "Handsome Tom",
+        "Coil Snake"
+      ],
+      "name": "Trick Or Trick Kid / Handsome Tom / Coil Snake"
+    },
+    {
+      "id": "15:0",
+      "layers": [
+        15,
+        0
+      ],
+      "groups": [
+        63
+      ],
+      "names": [
+        "Handsome Tom",
+        "Smilin Sam"
+      ],
+      "name": "Handsome Tom / Smilin Sam"
+    },
+    {
+      "id": "25:0",
+      "layers": [
+        25,
+        0
+      ],
+      "groups": [
+        64,
+        65
+      ],
+      "names": [
+        "Handsome Tom",
+        "Smilin Sam"
+      ],
+      "name": "Handsome Tom / Smilin Sam"
+    },
+    {
+      "id": "27:0",
+      "layers": [
+        27,
+        0
+      ],
+      "groups": [
+        66,
+        69,
+        72,
+        75,
+        77
+      ],
+      "names": [
+        "Urban Zombie",
+        "Putrid Moldyman",
+        "Smelly Ghost",
+        "No Good Fly",
+        "Zombie Dog"
+      ],
+      "name": "Urban Zombie / Putrid Moldyman / Smelly Ghost"
+    },
+    {
+      "id": "26:0",
+      "layers": [
+        26,
+        0
+      ],
+      "groups": [
+        67,
+        70,
+        71,
+        418
+      ],
+      "names": [
+        "Zombie Possessor",
+        "Urban Zombie",
+        "Putrid Moldyman",
+        "Smelly Ghost"
+      ],
+      "name": "Zombie Possessor / Urban Zombie / Putrid Moldyman"
+    },
+    {
+      "id": "28:0",
+      "layers": [
+        28,
+        0
+      ],
+      "groups": [
+        68,
+        73,
+        74
+      ],
+      "names": [
+        "No Good Fly",
+        "Putrid Moldyman",
+        "Smelly Ghost"
+      ],
+      "name": "No Good Fly / Putrid Moldyman / Smelly Ghost"
+    },
+    {
+      "id": "29:0",
+      "layers": [
+        29,
+        0
+      ],
+      "groups": [
+        76
+      ],
+      "names": [
+        "Zombie Dog"
+      ],
+      "name": "Zombie Dog"
+    },
+    {
+      "id": "317:0",
+      "layers": [
+        317,
+        0
+      ],
+      "groups": [
+        78,
+        79,
+        94,
+        95,
+        98
+      ],
+      "names": [
+        "Red Antoid",
+        "Black Antoid",
+        "Armored Frog",
+        "Plain Crocodile"
+      ],
+      "name": "Red Antoid / Black Antoid / Armored Frog"
+    },
+    {
+      "id": "32:0",
+      "layers": [
+        32,
+        0
+      ],
+      "groups": [
+        80,
+        81,
+        82,
+        83,
+        91,
+        92,
+        93,
+        96,
+        97
+      ],
+      "names": [
+        "Red Antoid",
+        "Armored Frog",
+        "Farm Zombie",
+        "Black Antoid",
+        "Plain Crocodile"
+      ],
+      "name": "Red Antoid / Armored Frog / Farm Zombie"
+    },
+    {
+      "id": "30:0",
+      "layers": [
+        30,
+        0
+      ],
+      "groups": [
+        84,
+        86,
+        99,
+        100
+      ],
+      "names": [
+        "Armored Frog",
+        "Farm Zombie"
+      ],
+      "name": "Armored Frog / Farm Zombie"
+    },
+    {
+      "id": "316:0",
+      "layers": [
+        316,
+        0
+      ],
+      "groups": [
+        85,
+        88
+      ],
+      "names": [
+        "Armored Frog",
+        "Plain Crocodile",
+        "Farm Zombie"
+      ],
+      "name": "Armored Frog / Plain Crocodile / Farm Zombie"
+    },
+    {
+      "id": "31:0",
+      "layers": [
+        31,
+        0
+      ],
+      "groups": [
+        87,
+        89,
+        90,
+        101,
+        102
+      ],
+      "names": [
+        "Plain Crocodile",
+        "Red Antoid",
+        "Farm Zombie",
+        "Armored Frog"
+      ],
+      "name": "Plain Crocodile / Red Antoid / Farm Zombie"
+    },
+    {
+      "id": "33:0",
+      "layers": [
+        33,
+        0
+      ],
+      "groups": [
+        103
+      ],
+      "names": [
+        "Mad Duck"
+      ],
+      "name": "Mad Duck"
+    },
+    {
+      "id": "34:0",
+      "layers": [
+        34,
+        0
+      ],
+      "groups": [
+        104
+      ],
+      "names": [
+        "Violent Roach"
+      ],
+      "name": "Violent Roach"
+    },
+    {
+      "id": "35:0",
+      "layers": [
+        35,
+        0
+      ],
+      "groups": [
+        109,
+        110,
+        111
+      ],
+      "names": [
+        "Bad Buffalo",
+        "Desert Wolf",
+        "Smilin Sphere"
+      ],
+      "name": "Bad Buffalo / Desert Wolf / Smilin Sphere"
+    },
+    {
+      "id": "38:0",
+      "layers": [
+        38,
+        0
+      ],
+      "groups": [
+        112
+      ],
+      "names": [
+        "Desert Wolf"
+      ],
+      "name": "Desert Wolf"
+    },
+    {
+      "id": "259:0",
+      "layers": [
+        259,
+        0
+      ],
+      "groups": [
+        113,
+        117,
+        118,
+        421,
+        428
+      ],
+      "names": [
+        "Skelpion",
+        "Cute Lil Ufo",
+        "Mole Playing Rough"
+      ],
+      "name": "Skelpion / Cute Lil Ufo / Mole Playing Rough"
+    },
+    {
+      "id": "318:0",
+      "layers": [
+        318,
+        0
+      ],
+      "groups": [
+        114,
+        115,
+        116
+      ],
+      "names": [
+        "Skelpion",
+        "Smilin Sphere",
+        "Cute Lil Ufo",
+        "Crested Booka"
+      ],
+      "name": "Skelpion / Smilin Sphere / Cute Lil Ufo"
+    },
+    {
+      "id": "36:0",
+      "layers": [
+        36,
+        0
+      ],
+      "groups": [
+        119,
+        120,
+        123
+      ],
+      "names": [
+        "Crested Booka",
+        "Bad Buffalo",
+        "Desert Wolf",
+        "Smilin Sphere"
+      ],
+      "name": "Crested Booka / Bad Buffalo / Desert Wolf"
+    },
+    {
+      "id": "319:0",
+      "layers": [
+        319,
+        0
+      ],
+      "groups": [
+        121,
+        122
+      ],
+      "names": [
+        "Crested Booka",
+        "Cute Lil Ufo",
+        "Smilin Sphere"
+      ],
+      "name": "Crested Booka / Cute Lil Ufo / Smilin Sphere"
+    },
+    {
+      "id": "41:0",
+      "layers": [
+        41,
+        0
+      ],
+      "groups": [
+        124
+      ],
+      "names": [
+        "Mad Taxi"
+      ],
+      "name": "Mad Taxi"
+    },
+    {
+      "id": "39:0",
+      "layers": [
+        39,
+        0
+      ],
+      "groups": [
+        125
+      ],
+      "names": [
+        "Extra Cranky Lady"
+      ],
+      "name": "Extra Cranky Lady"
+    },
+    {
+      "id": "42:0",
+      "layers": [
+        42,
+        0
+      ],
+      "groups": [
+        126
+      ],
+      "names": [
+        "Annoying Reveler"
+      ],
+      "name": "Annoying Reveler"
+    },
+    {
+      "id": "40:0",
+      "layers": [
+        40,
+        0
+      ],
+      "groups": [
+        127
+      ],
+      "names": [
+        "Crazed Sign"
+      ],
+      "name": "Crazed Sign"
+    },
+    {
+      "id": "43:0",
+      "layers": [
+        43,
+        0
+      ],
+      "groups": [
+        128,
+        438
+      ],
+      "names": [
+        "Dalis Clock",
+        "Enraged Fire Plug"
+      ],
+      "name": "Dalis Clock / Enraged Fire Plug"
+    },
+    {
+      "id": "189:0",
+      "layers": [
+        189,
+        0
+      ],
+      "groups": [
+        129
+      ],
+      "names": [
+        "Enraged Fire Plug"
+      ],
+      "name": "Enraged Fire Plug"
+    },
+    {
+      "id": "320:0",
+      "layers": [
+        320,
+        0
+      ],
+      "groups": [
+        130
+      ],
+      "names": [
+        "Enraged Fire Plug"
+      ],
+      "name": "Enraged Fire Plug"
+    },
+    {
+      "id": "44:0",
+      "layers": [
+        44,
+        0
+      ],
+      "groups": [
+        131,
+        440
+      ],
+      "names": [
+        "Abstract Art"
+      ],
+      "name": "Abstract Art"
+    },
+    {
+      "id": "157:0",
+      "layers": [
+        157,
+        0
+      ],
+      "groups": [
+        132,
+        439
+      ],
+      "names": [
+        "Robo Pump"
+      ],
+      "name": "Robo Pump"
+    },
+    {
+      "id": "288:0",
+      "layers": [
+        288,
+        0
+      ],
+      "groups": [
+        133
+      ],
+      "names": [
+        "Robo Pump",
+        "Enraged Fire Plug"
+      ],
+      "name": "Robo Pump / Enraged Fire Plug"
+    },
+    {
+      "id": "203:202",
+      "layers": [
+        203,
+        202
+      ],
+      "groups": [
+        134,
+        135
+      ],
+      "names": [
+        "Mad Taxi",
+        "Crazed Sign"
+      ],
+      "name": "Mad Taxi / Crazed Sign"
+    },
+    {
+      "id": "48:0",
+      "layers": [
+        48,
+        0
+      ],
+      "groups": [
+        136
+      ],
+      "names": [
+        "Crazed Sign"
+      ],
+      "name": "Crazed Sign"
+    },
+    {
+      "id": "46:0",
+      "layers": [
+        46,
+        0
+      ],
+      "groups": [
+        137
+      ],
+      "names": [
+        "Tough Guy"
+      ],
+      "name": "Tough Guy"
+    },
+    {
+      "id": "49:0",
+      "layers": [
+        49,
+        0
+      ],
+      "groups": [
+        138,
+        139,
+        429
+      ],
+      "names": [
+        "Over Zealous Cop",
+        "Tough Guy",
+        "Mole Playing Rough"
+      ],
+      "name": "Over Zealous Cop / Tough Guy / Mole Playing Rough"
+    },
+    {
+      "id": "53:0",
+      "layers": [
+        53,
+        0
+      ],
+      "groups": [
+        140,
+        141,
+        150,
+        151
+      ],
+      "names": [
+        "High Class Ufo",
+        "Beautiful Ufo",
+        "Marauder Octobot"
+      ],
+      "name": "High Class Ufo / Beautiful Ufo / Marauder Octobot"
+    },
+    {
+      "id": "321:0",
+      "layers": [
+        321,
+        0
+      ],
+      "groups": [
+        142,
+        149,
+        152
+      ],
+      "names": [
+        "High Class Ufo",
+        "Beautiful Ufo"
+      ],
+      "name": "High Class Ufo / Beautiful Ufo"
+    },
+    {
+      "id": "54:0",
+      "layers": [
+        54,
+        0
+      ],
+      "groups": [
+        143
+      ],
+      "names": [
+        "Beautiful Ufo"
+      ],
+      "name": "Beautiful Ufo"
+    },
+    {
+      "id": "56:0",
+      "layers": [
+        56,
+        0
+      ],
+      "groups": [
+        144,
+        145
+      ],
+      "names": [
+        "Dread Skelpion",
+        "Great Crested Booka"
+      ],
+      "name": "Dread Skelpion / Great Crested Booka"
+    },
+    {
+      "id": "52:0",
+      "layers": [
+        52,
+        0
+      ],
+      "groups": [
+        146,
+        147,
+        148
+      ],
+      "names": [
+        "Great Crested Booka",
+        "Dread Skelpion"
+      ],
+      "name": "Great Crested Booka / Dread Skelpion"
+    },
+    {
+      "id": "55:0",
+      "layers": [
+        55,
+        0
+      ],
+      "groups": [
+        153
+      ],
+      "names": [
+        "Marauder Octobot"
+      ],
+      "name": "Marauder Octobot"
+    },
+    {
+      "id": "57:0",
+      "layers": [
+        57,
+        0
+      ],
+      "groups": [
+        154,
+        159
+      ],
+      "names": [
+        "Hostile Elder Oak"
+      ],
+      "name": "Hostile Elder Oak"
+    },
+    {
+      "id": "61:0",
+      "layers": [
+        61,
+        0
+      ],
+      "groups": [
+        155,
+        167
+      ],
+      "names": [
+        "Pit Bull Slug"
+      ],
+      "name": "Pit Bull Slug"
+    },
+    {
+      "id": "59:0",
+      "layers": [
+        59,
+        0
+      ],
+      "groups": [
+        156,
+        168,
+        169
+      ],
+      "names": [
+        "Demonic Petunia",
+        "Hostile Elder Oak"
+      ],
+      "name": "Demonic Petunia / Hostile Elder Oak"
+    },
+    {
+      "id": "58:0",
+      "layers": [
+        58,
+        0
+      ],
+      "groups": [
+        157,
+        158
+      ],
+      "names": [
+        "Big Pile Of Puke",
+        "Even Slimier Little Pile"
+      ],
+      "name": "Big Pile Of Puke / Even Slimier Little Pile"
+    },
+    {
+      "id": "60:0",
+      "layers": [
+        60,
+        0
+      ],
+      "groups": [
+        160,
+        161,
+        430
+      ],
+      "names": [
+        "Zap Eel",
+        "Hard Crocodile",
+        "Mole Playing Rough"
+      ],
+      "name": "Zap Eel / Hard Crocodile / Mole Playing Rough"
+    },
+    {
+      "id": "62:0",
+      "layers": [
+        62,
+        0
+      ],
+      "groups": [
+        162,
+        163,
+        164
+      ],
+      "names": [
+        "Even Slimier Little Pile",
+        "Zap Eel",
+        "Hard Crocodile",
+        "Manly Fish"
+      ],
+      "name": "Even Slimier Little Pile / Zap Eel / Hard Crocodile"
+    },
+    {
+      "id": "63:0",
+      "layers": [
+        63,
+        0
+      ],
+      "groups": [
+        165,
+        166
+      ],
+      "names": [
+        "Manly Fish",
+        "Hard Crocodile",
+        "Manly Fishs Brother"
+      ],
+      "name": "Manly Fish / Hard Crocodile / Manly Fishs Brother"
+    },
+    {
+      "id": "64:0",
+      "layers": [
+        64,
+        0
+      ],
+      "groups": [
+        170
+      ],
+      "names": [
+        "Wetnosaur"
+      ],
+      "name": "Wetnosaur"
+    },
+    {
+      "id": "65:0",
+      "layers": [
+        65,
+        0
+      ],
+      "groups": [
+        171
+      ],
+      "names": [
+        "Chomposaur"
+      ],
+      "name": "Chomposaur"
+    },
+    {
+      "id": "66:0",
+      "layers": [
+        66,
+        0
+      ],
+      "groups": [
+        172
+      ],
+      "names": [
+        "Ego Orb"
+      ],
+      "name": "Ego Orb"
+    },
+    {
+      "id": "71:0",
+      "layers": [
+        71,
+        0
+      ],
+      "groups": [
+        173
+      ],
+      "names": [
+        "Care Free Bomb",
+        "Mr Molecule"
+      ],
+      "name": "Care Free Bomb / Mr Molecule"
+    },
+    {
+      "id": "322:0",
+      "layers": [
+        322,
+        0
+      ],
+      "groups": [
+        174
+      ],
+      "names": [
+        "Care Free Bomb"
+      ],
+      "name": "Care Free Bomb"
+    },
+    {
+      "id": "70:0",
+      "layers": [
+        70,
+        0
+      ],
+      "groups": [
+        175
+      ],
+      "names": [
+        "French Kiss Of Death"
+      ],
+      "name": "French Kiss Of Death"
+    },
+    {
+      "id": "67:0",
+      "layers": [
+        67,
+        0
+      ],
+      "groups": [
+        176
+      ],
+      "names": [
+        "Loaded Dice",
+        "Care Free Bomb",
+        "Beautiful Ufo",
+        "High Class Ufo"
+      ],
+      "name": "Loaded Dice / Care Free Bomb / Beautiful Ufo"
+    },
+    {
+      "id": "323:0",
+      "layers": [
+        323,
+        0
+      ],
+      "groups": [
+        177
+      ],
+      "names": [
+        "Loaded Dice",
+        "Electro Swoosh",
+        "Fobby",
+        "Uncontrollable Sphere"
+      ],
+      "name": "Loaded Dice / Electro Swoosh / Fobby"
+    },
+    {
+      "id": "268:0",
+      "layers": [
+        268,
+        0
+      ],
+      "groups": [
+        178,
+        179
+      ],
+      "names": [
+        "Electro Swoosh",
+        "French Kiss Of Death"
+      ],
+      "name": "Electro Swoosh / French Kiss Of Death"
+    },
+    {
+      "id": "68:0",
+      "layers": [
+        68,
+        0
+      ],
+      "groups": [
+        180,
+        181
+      ],
+      "names": [
+        "Mr Molecule"
+      ],
+      "name": "Mr Molecule"
+    },
+    {
+      "id": "72:0",
+      "layers": [
+        72,
+        0
+      ],
+      "groups": [
+        182,
+        183
+      ],
+      "names": [
+        "Rowdy Mouse",
+        "Attack Slug"
+      ],
+      "name": "Rowdy Mouse / Attack Slug"
+    },
+    {
+      "id": "75:0",
+      "layers": [
+        75,
+        0
+      ],
+      "groups": [
+        187,
+        188
+      ],
+      "names": [
+        "Attack Slug"
+      ],
+      "name": "Attack Slug"
+    },
+    {
+      "id": "73:0",
+      "layers": [
+        73,
+        0
+      ],
+      "groups": [
+        189,
+        190,
+        191,
+        192,
+        207,
+        208,
+        209,
+        210
+      ],
+      "names": [
+        "Elder Batty",
+        "Arachnid",
+        "Strong Crocodile",
+        "Mr Batty",
+        "Mole Playing Rough",
+        "Mighty Bear"
+      ],
+      "name": "Elder Batty / Arachnid / Strong Crocodile"
+    },
+    {
+      "id": "74:0",
+      "layers": [
+        74,
+        0
+      ],
+      "groups": [
+        193,
+        194,
+        195
+      ],
+      "names": [
+        "Strong Crocodile",
+        "Arachnid"
+      ],
+      "name": "Strong Crocodile / Arachnid"
+    },
+    {
+      "id": "78:0",
+      "layers": [
+        78,
+        0
+      ],
+      "groups": [
+        196
+      ],
+      "names": [
+        "Arachnid"
+      ],
+      "name": "Arachnid"
+    },
+    {
+      "id": "80:0",
+      "layers": [
+        80,
+        0
+      ],
+      "groups": [
+        197,
+        204,
+        205
+      ],
+      "names": [
+        "Black Antoid",
+        "Rowdy Mouse",
+        "Attack Slug"
+      ],
+      "name": "Black Antoid / Rowdy Mouse / Attack Slug"
+    },
+    {
+      "id": "81:0",
+      "layers": [
+        81,
+        0
+      ],
+      "groups": [
+        198,
+        199,
+        200
+      ],
+      "names": [
+        "Black Antoid",
+        "Attack Slug",
+        "Rowdy Mouse"
+      ],
+      "name": "Black Antoid / Attack Slug / Rowdy Mouse"
+    },
+    {
+      "id": "79:0",
+      "layers": [
+        79,
+        0
+      ],
+      "groups": [
+        201,
+        202,
+        203
+      ],
+      "names": [
+        "Black Antoid",
+        "Rowdy Mouse"
+      ],
+      "name": "Black Antoid / Rowdy Mouse"
+    },
+    {
+      "id": "82:0",
+      "layers": [
+        82,
+        0
+      ],
+      "groups": [
+        206,
+        211,
+        212
+      ],
+      "names": [
+        "Mole Playing Rough",
+        "Mighty Bear"
+      ],
+      "name": "Mole Playing Rough / Mighty Bear"
+    },
+    {
+      "id": "76:0",
+      "layers": [
+        76,
+        0
+      ],
+      "groups": [
+        213,
+        214
+      ],
+      "names": [
+        "Mighty Bear",
+        "Mr Batty"
+      ],
+      "name": "Mighty Bear / Mr Batty"
+    },
+    {
+      "id": "153:0",
+      "layers": [
+        153,
+        0
+      ],
+      "groups": [
+        215,
+        216
+      ],
+      "names": [
+        "Urban Zombie",
+        "Zombie Dog"
+      ],
+      "name": "Urban Zombie / Zombie Dog"
+    },
+    {
+      "id": "154:0",
+      "layers": [
+        154,
+        0
+      ],
+      "groups": [
+        217
+      ],
+      "names": [
+        "Zombie Dog",
+        "No Good Fly"
+      ],
+      "name": "Zombie Dog / No Good Fly"
+    },
+    {
+      "id": "152:0",
+      "layers": [
+        152,
+        0
+      ],
+      "groups": [
+        218,
+        219,
+        220,
+        221
+      ],
+      "names": [
+        "Zombie Possessor",
+        "Urban Zombie"
+      ],
+      "name": "Zombie Possessor / Urban Zombie"
+    },
+    {
+      "id": "186:185",
+      "layers": [
+        186,
+        185
+      ],
+      "groups": [
+        222
+      ],
+      "names": [
+        "Violent Roach"
+      ],
+      "name": "Violent Roach"
+    },
+    {
+      "id": "274:275",
+      "layers": [
+        274,
+        275
+      ],
+      "groups": [
+        223,
+        224,
+        225
+      ],
+      "names": [
+        "Foppy"
+      ],
+      "name": "Foppy"
+    },
+    {
+      "id": "276:277",
+      "layers": [
+        276,
+        277
+      ],
+      "groups": [
+        226,
+        227
+      ],
+      "names": [
+        "Foppy"
+      ],
+      "name": "Foppy"
+    },
+    {
+      "id": "280:0",
+      "layers": [
+        280,
+        0
+      ],
+      "groups": [
+        228,
+        229,
+        230
+      ],
+      "names": [
+        "Mostly Bad Fly",
+        "Slimy Lil Pile"
+      ],
+      "name": "Mostly Bad Fly / Slimy Lil Pile"
+    },
+    {
+      "id": "192:191",
+      "layers": [
+        192,
+        191
+      ],
+      "groups": [
+        231,
+        232,
+        233,
+        437,
+        482
+      ],
+      "names": [
+        "Slimy Lil Pile",
+        "Mini Barf"
+      ],
+      "name": "Slimy Lil Pile / Mini Barf"
+    },
+    {
+      "id": "281:282",
+      "layers": [
+        281,
+        282
+      ],
+      "groups": [
+        234,
+        235
+      ],
+      "names": [
+        "Farm Zombie"
+      ],
+      "name": "Farm Zombie"
+    },
+    {
+      "id": "134:0",
+      "layers": [
+        134,
+        0
+      ],
+      "groups": [
+        236,
+        237,
+        242
+      ],
+      "names": [
+        "Struttin Evil Mushroom",
+        "Tough Mobile Sprout",
+        "Ranboob"
+      ],
+      "name": "Struttin Evil Mushroom / Tough Mobile Sprout / Ranboob"
+    },
+    {
+      "id": "135:0",
+      "layers": [
+        135,
+        0
+      ],
+      "groups": [
+        238,
+        239,
+        241,
+        243
+      ],
+      "names": [
+        "Ranboob",
+        "Tough Mobile Sprout",
+        "Struttin Evil Mushroom"
+      ],
+      "name": "Ranboob / Tough Mobile Sprout / Struttin Evil Mushroom"
+    },
+    {
+      "id": "133:0",
+      "layers": [
+        133,
+        0
+      ],
+      "groups": [
+        240,
+        245,
+        246,
+        247
+      ],
+      "names": [
+        "Tough Mobile Sprout",
+        "Ranboob",
+        "Struttin Evil Mushroom"
+      ],
+      "name": "Tough Mobile Sprout / Ranboob / Struttin Evil Mushroom"
+    },
+    {
+      "id": "132:0",
+      "layers": [
+        132,
+        0
+      ],
+      "groups": [
+        244,
+        248
+      ],
+      "names": [
+        "Ranboob",
+        "Struttin Evil Mushroom"
+      ],
+      "name": "Ranboob / Struttin Evil Mushroom"
+    },
+    {
+      "id": "139:0",
+      "layers": [
+        139,
+        0
+      ],
+      "groups": [
+        249,
+        251,
+        255
+      ],
+      "names": [
+        "Gigantic Ant",
+        "Thirsty Coil Snake",
+        "Mad Duck"
+      ],
+      "name": "Gigantic Ant / Thirsty Coil Snake / Mad Duck"
+    },
+    {
+      "id": "138:0",
+      "layers": [
+        138,
+        0
+      ],
+      "groups": [
+        250,
+        252,
+        259,
+        260,
+        262,
+        264,
+        265
+      ],
+      "names": [
+        "Gigantic Ant",
+        "Thirsty Coil Snake",
+        "Noose Man",
+        "Mad Duck"
+      ],
+      "name": "Gigantic Ant / Thirsty Coil Snake / Noose Man"
+    },
+    {
+      "id": "136:0",
+      "layers": [
+        136,
+        0
+      ],
+      "groups": [
+        253,
+        256,
+        257,
+        258,
+        263
+      ],
+      "names": [
+        "Thirsty Coil Snake",
+        "Noose Man",
+        "Mad Duck"
+      ],
+      "name": "Thirsty Coil Snake / Noose Man / Mad Duck"
+    },
+    {
+      "id": "137:0",
+      "layers": [
+        137,
+        0
+      ],
+      "groups": [
+        254,
+        261
+      ],
+      "names": [
+        "Mad Duck",
+        "Thirsty Coil Snake",
+        "Noose Man",
+        "Gigantic Ant"
+      ],
+      "name": "Mad Duck / Thirsty Coil Snake / Noose Man"
+    },
+    {
+      "id": "85:0",
+      "layers": [
+        85,
+        0
+      ],
+      "groups": [
+        266,
+        268
+      ],
+      "names": [
+        "Musica",
+        "Mystical Record"
+      ],
+      "name": "Musica / Mystical Record"
+    },
+    {
+      "id": "86:0",
+      "layers": [
+        86,
+        0
+      ],
+      "groups": [
+        267,
+        272
+      ],
+      "names": [
+        "Musica",
+        "Mystical Record"
+      ],
+      "name": "Musica / Mystical Record"
+    },
+    {
+      "id": "87:0",
+      "layers": [
+        87,
+        0
+      ],
+      "groups": [
+        269
+      ],
+      "names": [
+        "Scalding Coffee Cup",
+        "Mystical Record"
+      ],
+      "name": "Scalding Coffee Cup / Mystical Record"
+    },
+    {
+      "id": "84:0",
+      "layers": [
+        84,
+        0
+      ],
+      "groups": [
+        270,
+        271
+      ],
+      "names": [
+        "Scalding Coffee Cup",
+        "Mystical Record"
+      ],
+      "name": "Scalding Coffee Cup / Mystical Record"
+    },
+    {
+      "id": "142:0",
+      "layers": [
+        142,
+        0
+      ],
+      "groups": [
+        273,
+        279
+      ],
+      "names": [
+        "Stinky Ghost"
+      ],
+      "name": "Stinky Ghost"
+    },
+    {
+      "id": "143:0",
+      "layers": [
+        143,
+        0
+      ],
+      "groups": [
+        274,
+        277,
+        278,
+        280,
+        285,
+        286
+      ],
+      "names": [
+        "Deadly Mouse",
+        "Stinky Ghost"
+      ],
+      "name": "Deadly Mouse / Stinky Ghost"
+    },
+    {
+      "id": "141:0",
+      "layers": [
+        141,
+        0
+      ],
+      "groups": [
+        275,
+        276,
+        281,
+        282,
+        284
+      ],
+      "names": [
+        "Filthy Attack Roach"
+      ],
+      "name": "Filthy Attack Roach"
+    },
+    {
+      "id": "140:0",
+      "layers": [
+        140,
+        0
+      ],
+      "groups": [
+        283
+      ],
+      "names": [
+        "Filthy Attack Roach"
+      ],
+      "name": "Filthy Attack Roach"
+    },
+    {
+      "id": "51:0",
+      "layers": [
+        51,
+        0
+      ],
+      "groups": [
+        287,
+        293
+      ],
+      "names": [
+        "Thunder Mite"
+      ],
+      "name": "Thunder Mite"
+    },
+    {
+      "id": "146:0",
+      "layers": [
+        146,
+        0
+      ],
+      "groups": [
+        288,
+        290,
+        295,
+        300
+      ],
+      "names": [
+        "Tangoo",
+        "Kiss Of Death",
+        "Conducting Menace"
+      ],
+      "name": "Tangoo / Kiss Of Death / Conducting Menace"
+    },
+    {
+      "id": "304:0",
+      "layers": [
+        304,
+        0
+      ],
+      "groups": [
+        289,
+        291
+      ],
+      "names": [
+        "Thunder Mite",
+        "Tangoo"
+      ],
+      "name": "Thunder Mite / Tangoo"
+    },
+    {
+      "id": "305:0",
+      "layers": [
+        305,
+        0
+      ],
+      "groups": [
+        292,
+        294,
+        299
+      ],
+      "names": [
+        "Tangoo",
+        "Conducting Menace"
+      ],
+      "name": "Tangoo / Conducting Menace"
+    },
+    {
+      "id": "144:0",
+      "layers": [
+        144,
+        0
+      ],
+      "groups": [
+        296,
+        297
+      ],
+      "names": [
+        "Kiss Of Death",
+        "Conducting Menace"
+      ],
+      "name": "Kiss Of Death / Conducting Menace"
+    },
+    {
+      "id": "145:0",
+      "layers": [
+        145,
+        0
+      ],
+      "groups": [
+        298
+      ],
+      "names": [
+        "Conducting Menace"
+      ],
+      "name": "Conducting Menace"
+    },
+    {
+      "id": "95:0",
+      "layers": [
+        95,
+        0
+      ],
+      "groups": [
+        301,
+        302,
+        305,
+        306,
+        307,
+        308,
+        310,
+        315,
+        316,
+        317,
+        318
+      ],
+      "names": [
+        "Arachnid2",
+        "Guardian Hieroglyph"
+      ],
+      "name": "Arachnid2 / Guardian Hieroglyph"
+    },
+    {
+      "id": "294:0",
+      "layers": [
+        294,
+        0
+      ],
+      "groups": [
+        303
+      ],
+      "names": [
+        "Fierce Shattered Man"
+      ],
+      "name": "Fierce Shattered Man"
+    },
+    {
+      "id": "96:0",
+      "layers": [
+        96,
+        0
+      ],
+      "groups": [
+        304,
+        309,
+        321
+      ],
+      "names": [
+        "Fierce Shattered Man",
+        "Arachnid2",
+        "Petrified Royal Guard",
+        "Lethal Asp Hieroglyph"
+      ],
+      "name": "Fierce Shattered Man / Arachnid2 / Petrified Royal Guard"
+    },
+    {
+      "id": "98:0",
+      "layers": [
+        98,
+        0
+      ],
+      "groups": [
+        311,
+        319,
+        320,
+        322
+      ],
+      "names": [
+        "Fierce Shattered Man",
+        "Petrified Royal Guard",
+        "Guardian Hieroglyph"
+      ],
+      "name": "Fierce Shattered Man / Petrified Royal Guard / Guardian Hieroglyph"
+    },
+    {
+      "id": "97:0",
+      "layers": [
+        97,
+        0
+      ],
+      "groups": [
+        312,
+        313,
+        443
+      ],
+      "names": [
+        "Fierce Shattered Man",
+        "Petrified Royal Guard",
+        "Guardian Hieroglyph"
+      ],
+      "name": "Fierce Shattered Man / Petrified Royal Guard / Guardian Hieroglyph"
+    },
+    {
+      "id": "99:0",
+      "layers": [
+        99,
+        0
+      ],
+      "groups": [
+        314,
+        444
+      ],
+      "names": [
+        "Lethal Asp Hieroglyph"
+      ],
+      "name": "Lethal Asp Hieroglyph"
+    },
+    {
+      "id": "159:0",
+      "layers": [
+        159,
+        0
+      ],
+      "groups": [
+        323
+      ],
+      "names": [
+        "Scalding Coffee Cup",
+        "Mystical Record",
+        "Worthless Protoplasm"
+      ],
+      "name": "Scalding Coffee Cup / Mystical Record / Worthless Protoplasm"
+    },
+    {
+      "id": "155:0",
+      "layers": [
+        155,
+        0
+      ],
+      "groups": [
+        324,
+        325
+      ],
+      "names": [
+        "Cute Lil Ufo"
+      ],
+      "name": "Cute Lil Ufo"
+    },
+    {
+      "id": "158:0",
+      "layers": [
+        158,
+        0
+      ],
+      "groups": [
+        326
+      ],
+      "names": [
+        "Dalis Clock"
+      ],
+      "name": "Dalis Clock"
+    },
+    {
+      "id": "45:258",
+      "layers": [
+        45,
+        258
+      ],
+      "groups": [
+        327,
+        328
+      ],
+      "names": [
+        "Robo Pump",
+        "Enraged Fire Plug"
+      ],
+      "name": "Robo Pump / Enraged Fire Plug"
+    },
+    {
+      "id": "162:0",
+      "layers": [
+        162,
+        0
+      ],
+      "groups": [
+        329
+      ],
+      "names": [
+        "Enraged Fire Plug"
+      ],
+      "name": "Enraged Fire Plug"
+    },
+    {
+      "id": "161:0",
+      "layers": [
+        161,
+        0
+      ],
+      "groups": [
+        330,
+        331,
+        332,
+        335,
+        336,
+        337
+      ],
+      "names": [
+        "Lesser Mook",
+        "Mook Senior"
+      ],
+      "name": "Lesser Mook / Mook Senior"
+    },
+    {
+      "id": "160:0",
+      "layers": [
+        160,
+        0
+      ],
+      "groups": [
+        333,
+        334
+      ],
+      "names": [
+        "Mook Senior"
+      ],
+      "name": "Mook Senior"
+    },
+    {
+      "id": "156:0",
+      "layers": [
+        156,
+        0
+      ],
+      "groups": [
+        338,
+        339,
+        340
+      ],
+      "names": [
+        "Worthless Protoplasm"
+      ],
+      "name": "Worthless Protoplasm"
+    },
+    {
+      "id": "198:0",
+      "layers": [
+        198,
+        0
+      ],
+      "groups": [
+        341,
+        347,
+        351
+      ],
+      "names": [
+        "Mook Senior"
+      ],
+      "name": "Mook Senior"
+    },
+    {
+      "id": "151:0",
+      "layers": [
+        151,
+        0
+      ],
+      "groups": [
+        342,
+        345,
+        348,
+        349
+      ],
+      "names": [
+        "Mook Senior",
+        "Starman",
+        "Atomic Power Robot"
+      ],
+      "name": "Mook Senior / Starman / Atomic Power Robot"
+    },
+    {
+      "id": "324:0",
+      "layers": [
+        324,
+        0
+      ],
+      "groups": [
+        343,
+        352,
+        353
+      ],
+      "names": [
+        "Mook Senior",
+        "Starman"
+      ],
+      "name": "Mook Senior / Starman"
+    },
+    {
+      "id": "283:0",
+      "layers": [
+        283,
+        0
+      ],
+      "groups": [
+        344,
+        346
+      ],
+      "names": [
+        "Starman"
+      ],
+      "name": "Starman"
+    },
+    {
+      "id": "271:0",
+      "layers": [
+        271,
+        0
+      ],
+      "groups": [
+        350,
+        354,
+        357,
+        363
+      ],
+      "names": [
+        "Starman",
+        "Starman Super",
+        "Atomic Power Robot"
+      ],
+      "name": "Starman / Starman Super / Atomic Power Robot"
+    },
+    {
+      "id": "243:0",
+      "layers": [
+        243,
+        0
+      ],
+      "groups": [
+        355,
+        356,
+        361,
+        362,
+        365,
+        366
+      ],
+      "names": [
+        "Atomic Power Robot",
+        "Starman",
+        "Starman Super",
+        "Military Octobot"
+      ],
+      "name": "Atomic Power Robot / Starman / Starman Super"
+    },
+    {
+      "id": "148:0",
+      "layers": [
+        148,
+        0
+      ],
+      "groups": [
+        358,
+        364
+      ],
+      "names": [
+        "Starman",
+        "Starman Super",
+        "Military Octobot"
+      ],
+      "name": "Starman / Starman Super / Military Octobot"
+    },
+    {
+      "id": "286:0",
+      "layers": [
+        286,
+        0
+      ],
+      "groups": [
+        359,
+        360
+      ],
+      "names": [
+        "Starman Super",
+        "Atomic Power Robot",
+        "Starman"
+      ],
+      "name": "Starman Super / Atomic Power Robot / Starman"
+    },
+    {
+      "id": "287:0",
+      "layers": [
+        287,
+        0
+      ],
+      "groups": [
+        367,
+        368
+      ],
+      "names": [
+        "Atomic Power Robot",
+        "Military Octobot"
+      ],
+      "name": "Atomic Power Robot / Military Octobot"
+    },
+    {
+      "id": "290:0",
+      "layers": [
+        290,
+        0
+      ],
+      "groups": [
+        369,
+        376
+      ],
+      "names": [
+        "Fobby"
+      ],
+      "name": "Fobby"
+    },
+    {
+      "id": "291:0",
+      "layers": [
+        291,
+        0
+      ],
+      "groups": [
+        370,
+        377
+      ],
+      "names": [
+        "Fobby"
+      ],
+      "name": "Fobby"
+    },
+    {
+      "id": "289:0",
+      "layers": [
+        289,
+        0
+      ],
+      "groups": [
+        371
+      ],
+      "names": [
+        "Fobby"
+      ],
+      "name": "Fobby"
+    },
+    {
+      "id": "312:0",
+      "layers": [
+        312,
+        0
+      ],
+      "groups": [
+        372,
+        374
+      ],
+      "names": [
+        "Fobby"
+      ],
+      "name": "Fobby"
+    },
+    {
+      "id": "100:0",
+      "layers": [
+        100,
+        0
+      ],
+      "groups": [
+        373,
+        378,
+        382
+      ],
+      "names": [
+        "Uncontrollable Sphere",
+        "Fobby",
+        "Conducting Spirit"
+      ],
+      "name": "Uncontrollable Sphere / Fobby / Conducting Spirit"
+    },
+    {
+      "id": "102:0",
+      "layers": [
+        102,
+        0
+      ],
+      "groups": [
+        375,
+        385
+      ],
+      "names": [
+        "Hyper Spinning Robo",
+        "Fobby",
+        "Uncontrollable Sphere",
+        "Conducting Spirit"
+      ],
+      "name": "Hyper Spinning Robo / Fobby / Uncontrollable Sphere"
+    },
+    {
+      "id": "309:0",
+      "layers": [
+        309,
+        0
+      ],
+      "groups": [
+        379
+      ],
+      "names": [
+        "Uncontrollable Sphere",
+        "Conducting Spirit"
+      ],
+      "name": "Uncontrollable Sphere / Conducting Spirit"
+    },
+    {
+      "id": "311:0",
+      "layers": [
+        311,
+        0
+      ],
+      "groups": [
+        380,
+        383,
+        384
+      ],
+      "names": [
+        "Uncontrollable Sphere",
+        "Hyper Spinning Robo",
+        "Conducting Spirit"
+      ],
+      "name": "Uncontrollable Sphere / Hyper Spinning Robo / Conducting Spirit"
+    },
+    {
+      "id": "103:0",
+      "layers": [
+        103,
+        0
+      ],
+      "groups": [
+        381,
+        388
+      ],
+      "names": [
+        "Conducting Spirit",
+        "Hyper Spinning Robo",
+        "Uncontrollable Sphere"
+      ],
+      "name": "Conducting Spirit / Hyper Spinning Robo / Uncontrollable Sphere"
+    },
+    {
+      "id": "310:0",
+      "layers": [
+        310,
+        0
+      ],
+      "groups": [
+        386,
+        387
+      ],
+      "names": [
+        "Hyper Spinning Robo",
+        "Conducting Spirit"
+      ],
+      "name": "Hyper Spinning Robo / Conducting Spirit"
+    },
+    {
+      "id": "106:0",
+      "layers": [
+        106,
+        0
+      ],
+      "groups": [
+        389,
+        396,
+        397,
+        402
+      ],
+      "names": [
+        "Soul Consuming Flame"
+      ],
+      "name": "Soul Consuming Flame"
+    },
+    {
+      "id": "303:0",
+      "layers": [
+        303,
+        0
+      ],
+      "groups": [
+        390,
+        400,
+        401
+      ],
+      "names": [
+        "Psychic Psycho",
+        "Soul Consuming Flame",
+        "Major Psychic Psycho"
+      ],
+      "name": "Psychic Psycho / Soul Consuming Flame / Major Psychic Psycho"
+    },
+    {
+      "id": "104:0",
+      "layers": [
+        104,
+        0
+      ],
+      "groups": [
+        391,
+        394
+      ],
+      "names": [
+        "Evil Elemental"
+      ],
+      "name": "Evil Elemental"
+    },
+    {
+      "id": "299:0",
+      "layers": [
+        299,
+        0
+      ],
+      "groups": [
+        392,
+        393,
+        395
+      ],
+      "names": [
+        "Evil Elemental",
+        "Soul Consuming Flame"
+      ],
+      "name": "Evil Elemental / Soul Consuming Flame"
+    },
+    {
+      "id": "105:0",
+      "layers": [
+        105,
+        0
+      ],
+      "groups": [
+        398
+      ],
+      "names": [
+        "Psychic Psycho",
+        "Major Psychic Psycho"
+      ],
+      "name": "Psychic Psycho / Major Psychic Psycho"
+    },
+    {
+      "id": "325:0",
+      "layers": [
+        325,
+        0
+      ],
+      "groups": [
+        399
+      ],
+      "names": [
+        "Evil Elemental",
+        "Psychic Psycho"
+      ],
+      "name": "Evil Elemental / Psychic Psycho"
+    },
+    {
+      "id": "297:0",
+      "layers": [
+        297,
+        0
+      ],
+      "groups": [
+        403,
+        407
+      ],
+      "names": [
+        "Ghost Of Starman",
+        "Nuclear Reactor Robot",
+        "Wild N Wooly Shambler"
+      ],
+      "name": "Ghost Of Starman / Nuclear Reactor Robot / Wild N Wooly Shambler"
+    },
+    {
+      "id": "111:0",
+      "layers": [
+        111,
+        0
+      ],
+      "groups": [
+        404
+      ],
+      "names": [
+        "Wild N Wooly Shambler",
+        "Ultimate Octobot"
+      ],
+      "name": "Wild N Wooly Shambler / Ultimate Octobot"
+    },
+    {
+      "id": "209:0",
+      "layers": [
+        209,
+        0
+      ],
+      "groups": [
+        405
+      ],
+      "names": [
+        "Ultimate Octobot",
+        "Nuclear Reactor Robot"
+      ],
+      "name": "Ultimate Octobot / Nuclear Reactor Robot"
+    },
+    {
+      "id": "296:0",
+      "layers": [
+        296,
+        0
+      ],
+      "groups": [
+        406
+      ],
+      "names": [
+        "Squatter Demon"
+      ],
+      "name": "Squatter Demon"
+    },
+    {
+      "id": "107:0",
+      "layers": [
+        107,
+        0
+      ],
+      "groups": [
+        408
+      ],
+      "names": [
+        "Ghost Of Starman",
+        "Nuclear Reactor Robot"
+      ],
+      "name": "Ghost Of Starman / Nuclear Reactor Robot"
+    },
+    {
+      "id": "110:0",
+      "layers": [
+        110,
+        0
+      ],
+      "groups": [
+        409
+      ],
+      "names": [
+        "Nuclear Reactor Robot",
+        "Final Starman"
+      ],
+      "name": "Nuclear Reactor Robot / Final Starman"
+    },
+    {
+      "id": "300:0",
+      "layers": [
+        300,
+        0
+      ],
+      "groups": [
+        410
+      ],
+      "names": [
+        "Ghost Of Starman",
+        "Final Starman"
+      ],
+      "name": "Ghost Of Starman / Final Starman"
+    },
+    {
+      "id": "301:0",
+      "layers": [
+        301,
+        0
+      ],
+      "groups": [
+        411
+      ],
+      "names": [
+        "Ghost Of Starman",
+        "Final Starman",
+        "Nuclear Reactor Robot"
+      ],
+      "name": "Ghost Of Starman / Final Starman / Nuclear Reactor Robot"
+    },
+    {
+      "id": "109:0",
+      "layers": [
+        109,
+        0
+      ],
+      "groups": [
+        412
+      ],
+      "names": [
+        "Bionic Kraken"
+      ],
+      "name": "Bionic Kraken"
+    },
+    {
+      "id": "212:213",
+      "layers": [
+        212,
+        213
+      ],
+      "groups": [
+        413,
+        414,
+        415
+      ],
+      "names": [
+        "Mobile Sprout",
+        "Ramblin Evil Mushroom"
+      ],
+      "name": "Mobile Sprout / Ramblin Evil Mushroom"
+    },
+    {
+      "id": "89:0",
+      "layers": [
+        89,
+        0
+      ],
+      "groups": [
+        419,
+        420
+      ],
+      "names": [
+        "Mr Batty",
+        "Zombie Possessor"
+      ],
+      "name": "Mr Batty / Zombie Possessor"
+    },
+    {
+      "id": "83:0",
+      "layers": [
+        83,
+        0
+      ],
+      "groups": [
+        422
+      ],
+      "names": [
+        "Mad Taxi"
+      ],
+      "name": "Mad Taxi"
+    },
+    {
+      "id": "266:267",
+      "layers": [
+        266,
+        267
+      ],
+      "groups": [
+        423
+      ],
+      "names": [
+        "Criminal Caterpillar"
+      ],
+      "name": "Criminal Caterpillar"
+    },
+    {
+      "id": "190:326",
+      "layers": [
+        190,
+        326
+      ],
+      "groups": [
+        424
+      ],
+      "names": [
+        "Master Criminal Worm"
+      ],
+      "name": "Master Criminal Worm"
+    },
+    {
+      "id": "306:307",
+      "layers": [
+        306,
+        307
+      ],
+      "groups": [
+        426,
+        434
+      ],
+      "names": [
+        "Coil Snake",
+        "Insane Cultist"
+      ],
+      "name": "Coil Snake / Insane Cultist"
+    },
+    {
+      "id": "307:306",
+      "layers": [
+        307,
+        306
+      ],
+      "groups": [
+        435,
+        436
+      ],
+      "names": [
+        "Unassuming Local Guy",
+        "Insane Cultist",
+        "Spiteful Crow"
+      ],
+      "name": "Unassuming Local Guy / Insane Cultist / Spiteful Crow"
+    },
+    {
+      "id": "284:0",
+      "layers": [
+        284,
+        0
+      ],
+      "groups": [
+        441
+      ],
+      "names": [
+        "Sentry Robot"
+      ],
+      "name": "Sentry Robot"
+    },
+    {
+      "id": "195:0",
+      "layers": [
+        195,
+        0
+      ],
+      "groups": [
+        442
+      ],
+      "names": [
+        "Shattered Man"
+      ],
+      "name": "Shattered Man"
+    },
+    {
+      "id": "213:212",
+      "layers": [
+        213,
+        212
+      ],
+      "groups": [
+        445
+      ],
+      "names": [
+        "Mad Duck"
+      ],
+      "name": "Mad Duck"
+    },
+    {
+      "id": "215:214",
+      "layers": [
+        215,
+        214
+      ],
+      "groups": [
+        446
+      ],
+      "names": [
+        "Worthless Protoplasm"
+      ],
+      "name": "Worthless Protoplasm"
+    },
+    {
+      "id": "217:216",
+      "layers": [
+        217,
+        216
+      ],
+      "groups": [
+        447
+      ],
+      "names": [
+        "Rowdy Mouse"
+      ],
+      "name": "Rowdy Mouse"
+    },
+    {
+      "id": "180:179",
+      "layers": [
+        180,
+        179
+      ],
+      "groups": [
+        448
+      ],
+      "names": [
+        "Frank"
+      ],
+      "name": "Frank"
+    },
+    {
+      "id": "182:181",
+      "layers": [
+        182,
+        181
+      ],
+      "groups": [
+        449
+      ],
+      "names": [
+        "Frankystein Mark Ii"
+      ],
+      "name": "Frankystein Mark Ii"
+    },
+    {
+      "id": "170:169",
+      "layers": [
+        170,
+        169
+      ],
+      "groups": [
+        450
+      ],
+      "names": [
+        "Titanic Ant",
+        "Black Antoid"
+      ],
+      "name": "Titanic Ant / Black Antoid"
+    },
+    {
+      "id": "184:183",
+      "layers": [
+        184,
+        183
+      ],
+      "groups": [
+        451,
+        452
+      ],
+      "names": [
+        "Cop",
+        "Captain Strong"
+      ],
+      "name": "Cop / Captain Strong"
+    },
+    {
+      "id": "273:272",
+      "layers": [
+        273,
+        272
+      ],
+      "groups": [
+        453
+      ],
+      "names": [
+        "Everdred"
+      ],
+      "name": "Everdred"
+    },
+    {
+      "id": "278:0",
+      "layers": [
+        278,
+        0
+      ],
+      "groups": [
+        454
+      ],
+      "names": [
+        "Mr Carpainter"
+      ],
+      "name": "Mr Carpainter"
+    },
+    {
+      "id": "172:171",
+      "layers": [
+        172,
+        171
+      ],
+      "groups": [
+        455
+      ],
+      "names": [
+        "Mondo Mole"
+      ],
+      "name": "Mondo Mole"
+    },
+    {
+      "id": "194:193",
+      "layers": [
+        194,
+        193
+      ],
+      "groups": [
+        456
+      ],
+      "names": [
+        "Master Belch",
+        "Slimy Lil Pile"
+      ],
+      "name": "Master Belch / Slimy Lil Pile"
+    },
+    {
+      "id": "174:173",
+      "layers": [
+        174,
+        173
+      ],
+      "groups": [
+        457
+      ],
+      "names": [
+        "Trillionage Sprout",
+        "Tough Mobile Sprout"
+      ],
+      "name": "Trillionage Sprout / Tough Mobile Sprout"
+    },
+    {
+      "id": "293:292",
+      "layers": [
+        293,
+        292
+      ],
+      "groups": [
+        458
+      ],
+      "names": [
+        "Boogey Tent"
+      ],
+      "name": "Boogey Tent"
+    },
+    {
+      "id": "196:0",
+      "layers": [
+        196,
+        0
+      ],
+      "groups": [
+        459
+      ],
+      "names": [
+        "Guardian Digger"
+      ],
+      "name": "Guardian Digger"
+    },
+    {
+      "id": "197:0",
+      "layers": [
+        197,
+        0
+      ],
+      "groups": [
+        460
+      ],
+      "names": [
+        "Dept Store Spook",
+        "Insane Cultist"
+      ],
+      "name": "Dept Store Spook / Insane Cultist"
+    },
+    {
+      "id": "302:0",
+      "layers": [
+        302,
+        0
+      ],
+      "groups": [
+        461
+      ],
+      "names": [
+        "Evil Mani Mani"
+      ],
+      "name": "Evil Mani Mani"
+    },
+    {
+      "id": "285:0",
+      "layers": [
+        285,
+        0
+      ],
+      "groups": [
+        462
+      ],
+      "names": [
+        "Clumsy Robot"
+      ],
+      "name": "Clumsy Robot"
+    },
+    {
+      "id": "178:177",
+      "layers": [
+        178,
+        177
+      ],
+      "groups": [
+        463
+      ],
+      "names": [
+        "Plague Rat Of Doom"
+      ],
+      "name": "Plague Rat Of Doom"
+    },
+    {
+      "id": "176:175",
+      "layers": [
+        176,
+        175
+      ],
+      "groups": [
+        464
+      ],
+      "names": [
+        "Thunder And Storm"
+      ],
+      "name": "Thunder And Storm"
+    },
+    {
+      "id": "168:167",
+      "layers": [
+        168,
+        167
+      ],
+      "groups": [
+        465
+      ],
+      "names": [
+        "Shrooom"
+      ],
+      "name": "Shrooom"
+    },
+    {
+      "id": "199:0",
+      "layers": [
+        199,
+        0
+      ],
+      "groups": [
+        466
+      ],
+      "names": [
+        "Starman Deluxe",
+        "Starman",
+        "Starman Super"
+      ],
+      "name": "Starman Deluxe / Starman / Starman Super"
+    },
+    {
+      "id": "201:200",
+      "layers": [
+        201,
+        200
+      ],
+      "groups": [
+        467
+      ],
+      "names": [
+        "Kraken"
+      ],
+      "name": "Kraken"
+    },
+    {
+      "id": "208:0",
+      "layers": [
+        208,
+        0
+      ],
+      "groups": [
+        468
+      ],
+      "names": [
+        "Guardian General"
+      ],
+      "name": "Guardian General"
+    },
+    {
+      "id": "211:210",
+      "layers": [
+        211,
+        210
+      ],
+      "groups": [
+        469
+      ],
+      "names": [
+        "Master Barf",
+        "Even Slimier Little Pile"
+      ],
+      "name": "Master Barf / Even Slimier Little Pile"
+    },
+    {
+      "id": "164:163",
+      "layers": [
+        164,
+        163
+      ],
+      "groups": [
+        470
+      ],
+      "names": [
+        "Electro Specter"
+      ],
+      "name": "Electro Specter"
+    },
+    {
+      "id": "166:165",
+      "layers": [
+        166,
+        165
+      ],
+      "groups": [
+        471
+      ],
+      "names": [
+        "Carbon Dog",
+        "Diamond Dog"
+      ],
+      "name": "Carbon Dog / Diamond Dog"
+    },
+    {
+      "id": "298:0",
+      "layers": [
+        298,
+        0
+      ],
+      "groups": [
+        472
+      ],
+      "names": [
+        "Your Nightmare"
+      ],
+      "name": "Your Nightmare"
+    },
+    {
+      "id": "219:218",
+      "layers": [
+        219,
+        218
+      ],
+      "groups": [
+        474
+      ],
+      "names": [
+        "Starman Jr"
+      ],
+      "name": "Starman Jr"
+    },
+    {
+      "id": "220:0",
+      "layers": [
+        220,
+        0
+      ],
+      "groups": [
+        475
+      ],
+      "names": [
+        "Giygas",
+        "Heavily Armed Pokey"
+      ],
+      "name": "Giygas / Heavily Armed Pokey"
+    },
+    {
+      "id": "222:221",
+      "layers": [
+        222,
+        221
+      ],
+      "groups": [
+        476
+      ],
+      "names": [
+        "Giygas",
+        "Heavily Armed Pokey"
+      ],
+      "name": "Giygas / Heavily Armed Pokey"
+    },
+    {
+      "id": "224:223",
+      "layers": [
+        224,
+        223
+      ],
+      "groups": [
+        477
+      ],
+      "names": [
+        "Giygas",
+        "Heavily Armed Pokey"
+      ],
+      "name": "Giygas / Heavily Armed Pokey"
+    },
+    {
+      "id": "225:0",
+      "layers": [
+        225,
+        0
+      ],
+      "groups": [
+        478
+      ],
+      "names": [
+        "Giygas",
+        "Heavily Armed Pokey"
+      ],
+      "name": "Giygas / Heavily Armed Pokey"
+    },
+    {
+      "id": "226:0",
+      "layers": [
+        226,
+        0
+      ],
+      "groups": [
+        479
+      ],
+      "names": [
+        "Giygas",
+        "Heavily Armed Pokey"
+      ],
+      "name": "Giygas / Heavily Armed Pokey"
+    },
+    {
+      "id": "227:0",
+      "layers": [
+        227,
+        0
+      ],
+      "groups": [
+        480
+      ],
+      "names": [
+        "Giygas",
+        "Heavily Armed Pokey"
+      ],
+      "name": "Giygas / Heavily Armed Pokey"
+    },
+    {
+      "id": "265:0",
+      "layers": [
+        265,
+        0
+      ],
+      "groups": [
+        483
+      ],
+      "names": [
+        "Giygas",
+        "Heavily Armed Pokey"
+      ],
+      "name": "Giygas / Heavily Armed Pokey"
+    }
+  ]
+}

@@ -1,134 +1,83 @@
-# Earthbound Screensaver
+# EarthBound Screensaver
 
-A native macOS screensaver that displays the iconic battle backgrounds from Earthbound/Mother 2, cycling through random combinations.
+EarthBound's battle backgrounds as an offline macOS screensaver, with a native preview app for finding your favorites.
 
-![Earthbound Screensaver](assets/demo.gif)
-
-## Credits
-
-This project is a thin wrapper around **[Earthbound Battle Backgrounds JS](https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS)** by **[Garen Torikian](https://github.com/gjtorikian)** — all the rendering magic happens there.
-
-Additional thanks to:
-- **[@kdex](https://github.com/kdex)** — ES2016 rewrite of the engine
-- **Mr. Accident** (forum.starmen.net) — Original C# implementation and distortion math
-- **[liquidx](https://github.com/liquidx)** — WebViewScreenSaver (reference for macOS WKWebView fixes)
-- **[CodeMan38](https://www.zone38.net/)** — [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P) font (SIL OFL 1.1)
+![EarthBound Screensaver](assets/demo.gif)
 
 ## Features
 
-- **52,650 Combinations**: Randomly cycles through all 327 layer styles in two-layer compositions
-- **Native macOS App**: Standalone `.saver` bundle - no dependencies required
-- **Configurable**: Adjust cycle timing via URL parameters
-- **Offline**: Works completely without internet
-- **Authentic**: Pixelated rendering preserves the retro SNES aesthetic
-- **Sonoma/Sequoia Compatible**: Includes fixes for macOS 14+ blank screen issues
+- **224 original pairings** with encounter names derived from the game's battle-group data.
+- **Remix mode** combines any of the 327 raw layers and crossfades between scenes.
+- **Deterministic animation** implements scrolling sequences, distortion durations, wrapping integer arithmetic, sine-table scanline effects, and frame-based palette cycles.
+- **Display choices**: 4:3, integer source-pixel scaling, or full-screen stretch.
+- **Background Studio**: searchable thumbnails, favorites, exclusions, and a live native WKWebView preview.
+- **Offline and universal**: self-contained Intel/Apple Silicon builds.
+- **Two hosts**: the established `.saver` wrapper and an experimental app-extension target embedded in Studio.
 
-## Installation
+“Authentic pairings” means pairings taken from the game data. The renderer is disassembly-based, but has not been compared with emulator captures and does not simulate the whole battle engine. See [fidelity and validation details](docs/renderer.md).
 
-### Option 1: Download Pre-built Release (Easiest)
+## Build and preview
 
-1. Download the latest `EarthboundScreensaver.saver.zip` from [Releases](../../releases)
-2. Unzip and double-click the `.saver` file to install
-3. **If macOS blocks installation:** Right-click the `.saver` file → **Open** → **Open** again to bypass Gatekeeper (the screensaver is not notarized)
-4. Open **System Settings** → **Screen Saver** → click **Show All** → select **Earthbound Screensaver**
+Requires Node.js 24+, Xcode, and [Task](https://taskfile.dev). Local validation used Xcode 26.6 and macOS 26.5.2. Studio and its experimental extension target macOS 14+.
 
-### Option 2: Build from Source
-
-Requires:
-- Node.js 24+ ([install with nvm](https://github.com/nvm-sh/nvm))
-- Xcode (for native build)
-- [Task](https://taskfile.dev) (`brew install go-task`)
-
-```bash
-# Clone and build
-git clone https://github.com/sjmatta/earthbound-screensaver.git
-cd earthbound-screensaver
-
-# Build and install
-task install
-
-# Or step by step:
-task setup    # Build web assets
-task build    # Build native .saver bundle
-task install  # Install to ~/Library/Screen Savers
+```sh
+git clone https://github.com/sjmatta/earthbound-macos-screensaver.git
+cd earthbound-macos-screensaver
+task preview
 ```
 
-### Available Tasks
+Useful commands:
 
-```bash
-task              # Show all available tasks
-task install      # Build and install screensaver
-task run          # Install and launch for testing
-task logs         # Stream screensaver logs (for debugging)
-task check        # Run diagnostics
-task clean        # Remove build artifacts
-task help:macos   # Show macOS screensaver development tips
+```sh
+task build             # dist/EarthboundScreensaver.saver
+task build:studio      # dist/EarthboundStudio.app, including experimental .appex
+task install           # install the legacy .saver in ~/Library/Screen Savers
+npm test               # state, renderer, selection, and built-page startup checks
+scripts/test-native.sh # repeated-stop and cross-display restart checks
+npm run dev            # browser development; add ?preview=true for the gallery
 ```
 
-## Configuration
+Builds use the committed Xcode projects. XcodeGen is only needed to regenerate the Studio project after editing `native/studio.yml` (`task project:studio`). Building/opening Studio does not change the selected system screensaver. Keep one app location when experimenting with extension registration; macOS caches extension locations.
 
-Customize behavior by editing `src/screensaver.js` before building, or via URL parameters if using the web version:
+## Configure
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `interval` | `60` | Seconds between background changes |
+In Studio, choose a collection, display mode, interval, and whether to show names. Search the gallery to favorite or exclude a pairing. Clicking a scene holds it in the preview; **Next background** resumes rotation. With no available favorites, Favorites only falls back to the non-excluded collection. Excluding everything leaves a black frame until a scene is restored.
 
-## Project Structure
+Studio saves to the legacy saver's preferences domain. The legacy options sheet also exposes collection, display, interval, names, and Favorites only. The experimental extension provides the full gallery in its options window; its sandbox preference sharing remains subject to host-level validation.
 
-```
-earthbound-screensaver/
-├── Taskfile.yml              # Build tasks (run with `task`)
-├── assets/
-│   └── demo.gif              # README animation
-├── src/
-│   ├── index.html            # HTML entry point
-│   └── main.js               # Screensaver logic
-├── native/
-│   └── EarthboundScreensaver/
-│       ├── EarthboundScreensaverView.swift  # Native wrapper
-│       └── Info.plist
-├── dist/                     # Built output (generated)
-│   └── EarthboundScreensaver.saver
-└── CLAUDE.md                 # Development notes
-```
+For browser use, add URL parameters:
 
-## Troubleshooting
+| Parameter | Example | Meaning |
+| --- | --- | --- |
+| `preview` | `true` | Show Studio controls and gallery |
+| `mode` | `authentic` or `remix` | Original pairings or arbitrary combinations |
+| `scale` | `4:3`, `pixels`, `fill` | Display scaling |
+| `interval` | `60` | Seconds per scene, clamped to 5–300 |
+| `showLayerNames` | `false` | Hide overlays |
+| `layer1`, `layer2` | `269`, `270` | Pin a pair and disable automatic cycling |
+| `frame` | `120` | Render a fixed simulation frame for inspection |
+| `debug` | `true` | Keep the name overlay visible |
 
-### Blank/Black Screen on macOS Sonoma/Sequoia
+## Installation and macOS compatibility
 
-This is a known issue with WKWebView in screensavers on macOS 14+. The native `.saver` bundle includes the fix. If you're using the web version with WebViewScreenSaver, ensure you have version 2.3+.
+Build and run `task install` to install the legacy saver. On Tahoe, select it through **System Settings → Wallpaper → Screen Saver**. Earlier versions have a separate Screen Saver pane. Local bundles use ad-hoc signing; Developer ID notarization has not been performed.
 
-### Screensaver Not Appearing
+Legacy WKWebView screensavers have documented OS lifecycle and display issues. This project keeps its occlusion and dismissal workarounds. The new extension uses private Apple APIs and is **experimental**; successful compilation and native preview rendering do not establish lock-screen, multi-monitor, or future-OS compatibility. [Current implementation notes](docs/renderer.md), [September research review](docs/2026-09-06-review.md).
 
-Third-party screensavers are hidden in macOS Sequoia:
-1. Open **System Settings** → **Screen Saver**
-2. Scroll down and click **Show All**
-3. Look in the "Other" section
+## Rendering checks
 
-### Debugging
+Capture a scene without running a browser:
 
-```bash
-task logs        # Stream live logs
-task logs:errors # Show recent errors
-task check       # Run diagnostics
-task kill-processes  # Clear cached processes after rebuilding
+```sh
+npm run capture -- 269 270 120 output/capture
+node scripts/compare-frames.mjs output/capture.rgba reference.rgba
+node scripts/benchmark.mjs
 ```
 
-## How It Works
+Capture emits raw RGBA8, a PPM image, and source/frame metadata. It is an implementation capture, not independent emulator evidence. The [renderer guide](docs/renderer.md) explains reference alignment and remaining fidelity boundaries.
 
-This screensaver uses [Earthbound Battle Backgrounds JS](https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS) by Garen Torikian to render the backgrounds. The build process:
+## Credits
 
-1. Clones the upstream project
-2. Patches it for offline `file://` compatibility
-3. Builds and extracts needed assets
-4. Wraps in a native macOS `.saver` bundle with WKWebView
+The ROM graphics/arrangement decoder and bundled background data come from [EarthBound Battle Backgrounds JS](https://github.com/gjtorikian/Earthbound-Battle-Backgrounds-JS) by Garen Torikian, with contributions from kdex and the original work by Mr. Accident. Animation and encounter metadata use [Herringway/ebsrc](https://github.com/Herringway/ebsrc). The experimental host follows [AppexSaverMinimal](https://github.com/AerialScreensaver/AppexSaverMinimal) by Guillaume Louel. Thanks also to [WebViewScreenSaver](https://github.com/liquidx/webviewscreensaver) and CodeMan38's Press Start 2P font.
 
-The native wrapper includes critical fixes for macOS Sonoma/Sequoia compatibility (disabling WKWebView window occlusion detection).
-
-## License
-
-MIT License - see [LICENSE](LICENSE)
-
-Third-party licenses are listed in [NOTICES](NOTICES).
-
-This project is not affiliated with Nintendo, Ape, HAL Laboratory, or Shigesato Itoi.
+MIT for the project code; see [LICENSE](LICENSE) and [NOTICES](NOTICES) for attribution and third-party material. EarthBound / Mother 2 and the original game assets belong to their respective rights holders. This project is not affiliated with Nintendo, Ape, HAL Laboratory, or Shigesato Itoi.

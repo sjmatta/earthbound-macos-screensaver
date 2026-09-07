@@ -12,6 +12,7 @@
 		A1B2C3D400000005 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D400000006 /* WebKit.framework */; };
 		A1B2C3D400000007 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D400000008 /* Resources */; };
 		A1B2C3D40000001A /* ConfigureSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000001B /* ConfigureSheetController.swift */; };
+		A1B2C3D40000001C = {isa = PBXBuildFile; fileRef = A1B2C3D40000001D; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		A1B2C3D400000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1B2C3D40000000A /* EarthboundScreensaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EarthboundScreensaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3D40000001B /* ConfigureSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSheetController.swift; sourceTree = "<group>"; };
+		A1B2C3D40000001D = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedHostExit.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 			children = (
 				A1B2C3D400000002 /* EarthboundScreensaverView.swift */,
 				A1B2C3D40000001B /* ConfigureSheetController.swift */,
+                A1B2C3D40000001D /* DelayedHostExit.swift */,
 				A1B2C3D400000009 /* Info.plist */,
 				A1B2C3D400000008 /* Resources */,
 			);
@@ -145,6 +148,7 @@
 			files = (
 				A1B2C3D400000001 /* EarthboundScreensaverView.swift in Sources */,
 				A1B2C3D40000001A /* ConfigureSheetController.swift in Sources */,
+                A1B2C3D40000001C /* DelayedHostExit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

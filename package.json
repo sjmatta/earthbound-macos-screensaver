@@ -19,7 +19,10 @@
     "install-saver": "task install",
     "clean": "task clean",
     "dev": "vite",
-    "build:vite": "vite build"
+    "build:vite": "vite build",
+    "test": "node --test tests/*.test.js",
+    "capture": "node scripts/capture-frame.mjs",
+    "build:studio": "task build:studio"
   },
   "engines": {
     "node": ">= 24.0.0"
@@ -29,7 +32,7 @@
     "string.prototype.padstart": "^3.1.0"
   },
   "devDependencies": {
-    "vite": "^8.1.5",
+    "vite": "^8.2.2",
     "vite-plugin-arraybuffer": "^0.1.4"
   }
 }

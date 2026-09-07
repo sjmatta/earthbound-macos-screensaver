@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1AEFEE1320C01FEC1904B043 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F171BF9857D90A5126FBD67E /* WebKit.framework */; };
+		28F4B1221E6A08D5C2F48C76 /* ConfigureSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465030E090483AEDAD9A29FC /* ConfigureSheetController.swift */; };
+		2D8CC4034AD72484F98EF10C /* EarthboundScreensaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB82BC9432EC6E3EB2B18B2 /* EarthboundScreensaverView.swift */; };
+		37DDA246CD7D1B53348E16E3 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEB406C94ADDFAACF8A46115 /* ScreenSaver.framework */; };
+		46F4C6FDB84BB12A29CF26AD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F171BF9857D90A5126FBD67E /* WebKit.framework */; };
+		7583D10AF64610EE155D5797 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E45AD25BED33E29C9C0B09 /* main.swift */; };
+		87ADB6CB615CAAA59F31910B /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = BC815AFF3BE0540187EC758B /* Resources */; };
+		A9CD0B03E12D2C964AC83FD3 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEB406C94ADDFAACF8A46115 /* ScreenSaver.framework */; };
+		AD3FF583A0A9BD4E2C9AFF89 /* DelayedHostExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12359016471BCA04E9EFFCC /* DelayedHostExit.swift */; };
+		B61F71A79E072490C1EC33FA /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7B5C4D3557B1BA014AFFD9 /* Extension.swift */; };
+		B73632D5629D947EDED1F761 /* EarthboundScreensaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB82BC9432EC6E3EB2B18B2 /* EarthboundScreensaverView.swift */; };
+		CB349B9745C4DAA3FCE87F11 /* EarthboundExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BA1F6D4EAEDBF26322B4D1B6 /* EarthboundExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CFE6369DD78009519408BA35 /* ConfigureSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465030E090483AEDAD9A29FC /* ConfigureSheetController.swift */; };
+		D4EA145C7DBAC7408D53B0F2 /* DelayedHostExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12359016471BCA04E9EFFCC /* DelayedHostExit.swift */; };
+		EC7FC37824C9BC840652BAA5 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = BC815AFF3BE0540187EC758B /* Resources */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E8C147D75F0DD4C075B52B8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D7DE9ABBF6C6EBF2D8A4F5A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F29CD2E0182B2E06DD0A0849;
+			remoteInfo = EarthboundExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		39B2BB813A33E2982E3D34D3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CB349B9745C4DAA3FCE87F11 /* EarthboundExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1D7B5C4D3557B1BA014AFFD9 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		2BE2BDBE356A88FEC7C5EBB2 /* ScreenSaverPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScreenSaverPrivate.h; sourceTree = "<group>"; };
+		465030E090483AEDAD9A29FC /* ConfigureSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSheetController.swift; sourceTree = "<group>"; };
+		A4E45AD25BED33E29C9C0B09 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		B73A5C04206F47C187B1C338 /* EarthboundStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EarthboundStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA1F6D4EAEDBF26322B4D1B6 /* EarthboundExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EarthboundExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC815AFF3BE0540187EC758B /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Resources; path = EarthboundScreensaver/Resources; sourceTree = SOURCE_ROOT; };
+		CEB82BC9432EC6E3EB2B18B2 /* EarthboundScreensaverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthboundScreensaverView.swift; sourceTree = "<group>"; };
+		D12359016471BCA04E9EFFCC /* DelayedHostExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedHostExit.swift; sourceTree = "<group>"; };
+		DEB406C94ADDFAACF8A46115 /* ScreenSaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenSaver.framework; path = System/Library/Frameworks/ScreenSaver.framework; sourceTree = SDKROOT; };
+		F171BF9857D90A5126FBD67E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		F243CA5605253D34A6B3F778 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5B784ED8351ABB379E076C92 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37DDA246CD7D1B53348E16E3 /* ScreenSaver.framework in Frameworks */,
+				46F4C6FDB84BB12A29CF26AD /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7F7E6526B228AE1A6F60B7EA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9CD0B03E12D2C964AC83FD3 /* ScreenSaver.framework in Frameworks */,
+				1AEFEE1320C01FEC1904B043 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		09FADC9D65EED8321C798AB0 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				1D7B5C4D3557B1BA014AFFD9 /* Extension.swift */,
+				2BE2BDBE356A88FEC7C5EBB2 /* ScreenSaverPrivate.h */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		18735EBC917D9B24FB05ACCF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DEB406C94ADDFAACF8A46115 /* ScreenSaver.framework */,
+				F171BF9857D90A5126FBD67E /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5618D4309504E3524EC4B123 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BA1F6D4EAEDBF26322B4D1B6 /* EarthboundExtension.appex */,
+				B73A5C04206F47C187B1C338 /* EarthboundStudio.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A4FBEEF3222B0151E4F1EA56 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				F243CA5605253D34A6B3F778 /* Info.plist */,
+				A4E45AD25BED33E29C9C0B09 /* main.swift */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
+		C9441AB22D0E8A7FAE1086C6 = {
+			isa = PBXGroup;
+			children = (
+				BC815AFF3BE0540187EC758B /* Resources */,
+				DD35EBE08F3C34DEBCC4BFEE /* EarthboundScreensaver */,
+				09FADC9D65EED8321C798AB0 /* Extension */,
+				A4FBEEF3222B0151E4F1EA56 /* Preview */,
+				18735EBC917D9B24FB05ACCF /* Frameworks */,
+				5618D4309504E3524EC4B123 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DD35EBE08F3C34DEBCC4BFEE /* EarthboundScreensaver */ = {
+			isa = PBXGroup;
+			children = (
+				465030E090483AEDAD9A29FC /* ConfigureSheetController.swift */,
+				D12359016471BCA04E9EFFCC /* DelayedHostExit.swift */,
+				CEB82BC9432EC6E3EB2B18B2 /* EarthboundScreensaverView.swift */,
+			);
+			path = EarthboundScreensaver;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0E8F6E87A0168BEACD1826B4 /* EarthboundStudio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B60613589CA05C0E77BDC684 /* Build configuration list for PBXNativeTarget "EarthboundStudio" */;
+			buildPhases = (
+				CC61C25D62CD9F7C8243ACAA /* Sources */,
+				F9BC2849E56B247B70486A4D /* Resources */,
+				7F7E6526B228AE1A6F60B7EA /* Frameworks */,
+				39B2BB813A33E2982E3D34D3 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D716E1C1102B1F1FCE9F2A83 /* PBXTargetDependency */,
+			);
+			name = EarthboundStudio;
+			packageProductDependencies = (
+			);
+			productName = EarthboundStudio;
+			productReference = B73A5C04206F47C187B1C338 /* EarthboundStudio.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F29CD2E0182B2E06DD0A0849 /* EarthboundExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E234C03980E54C2A3E69270B /* Build configuration list for PBXNativeTarget "EarthboundExtension" */;
+			buildPhases = (
+				DB5D9AB23A16996AF40AAF20 /* Sources */,
+				3F6DAE95F88E79501891C9EF /* Resources */,
+				5B784ED8351ABB379E076C92 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EarthboundExtension;
+			packageProductDependencies = (
+			);
+			productName = EarthboundExtension;
+			productReference = BA1F6D4EAEDBF26322B4D1B6 /* EarthboundExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4D7DE9ABBF6C6EBF2D8A4F5A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0E8F6E87A0168BEACD1826B4 = {
+						ProvisioningStyle = Manual;
+					};
+					F29CD2E0182B2E06DD0A0849 = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = FA2F2FBB189566D8B646715E /* Build configuration list for PBXProject "EarthboundStudio" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C9441AB22D0E8A7FAE1086C6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5618D4309504E3524EC4B123 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0E8F6E87A0168BEACD1826B4 /* EarthboundStudio */,
+				F29CD2E0182B2E06DD0A0849 /* EarthboundExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3F6DAE95F88E79501891C9EF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC7FC37824C9BC840652BAA5 /* Resources in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F9BC2849E56B247B70486A4D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				87ADB6CB615CAAA59F31910B /* Resources in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CC61C25D62CD9F7C8243ACAA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFE6369DD78009519408BA35 /* ConfigureSheetController.swift in Sources */,
+				AD3FF583A0A9BD4E2C9AFF89 /* DelayedHostExit.swift in Sources */,
+				2D8CC4034AD72484F98EF10C /* EarthboundScreensaverView.swift in Sources */,
+				7583D10AF64610EE155D5797 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB5D9AB23A16996AF40AAF20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28F4B1221E6A08D5C2F48C76 /* ConfigureSheetController.swift in Sources */,
+				D4EA145C7DBAC7408D53B0F2 /* DelayedHostExit.swift in Sources */,
+				B73632D5629D947EDED1F761 /* EarthboundScreensaverView.swift in Sources */,
+				B61F71A79E072490C1EC33FA /* Extension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D716E1C1102B1F1FCE9F2A83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F29CD2E0182B2E06DD0A0849 /* EarthboundExtension */;
+			targetProxy = E8C147D75F0DD4C075B52B8B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		380F1399B337C6A6D9504B59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "arm64 x86_64";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 2.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3C68736479983951C7E87867 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Extension/EarthboundExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Extension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sjmatta.earthbound-studio.screensaver";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = Extension/ScreenSaverPrivate.h;
+			};
+			name = Release;
+		};
+		578EE021BE50A92141653FBD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "arm64 x86_64";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 2.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		9B30D3F95E6C7D570D2B8095 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Extension/EarthboundExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Extension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sjmatta.earthbound-studio.screensaver";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = Extension/ScreenSaverPrivate.h;
+			};
+			name = Debug;
+		};
+		ED42B8832ED10EE641330200 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Preview/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sjmatta.earthbound-studio";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FBA765FDE51520485E4A5B4D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Preview/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sjmatta.earthbound-studio";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B60613589CA05C0E77BDC684 /* Build configuration list for PBXNativeTarget "EarthboundStudio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED42B8832ED10EE641330200 /* Debug */,
+				FBA765FDE51520485E4A5B4D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E234C03980E54C2A3E69270B /* Build configuration list for PBXNativeTarget "EarthboundExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B30D3F95E6C7D570D2B8095 /* Debug */,
+				3C68736479983951C7E87867 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FA2F2FBB189566D8B646715E /* Build configuration list for PBXProject "EarthboundStudio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				380F1399B337C6A6D9504B59 /* Debug */,
+				578EE021BE50A92141653FBD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4D7DE9ABBF6C6EBF2D8A4F5A /* Project object */;
+}

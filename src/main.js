@@ -1,281 +1,163 @@
-/**
- * Earthbound Battle Backgrounds Screensaver
- *
- * Displays random Earthbound battle backgrounds, cycling at a configurable interval.
- * Built with Vite - all dependencies are bundled into a single file.
- *
- * We drive the render loop here rather than using the engine's own `animate()` so
- * that we can cancel it (`animate()` offers no stop) and so that layer opacity stays
- * under our control - see LAYER_ALPHA below.
- *
- * URL Parameters:
- *   ?interval=30          - Cycle every 30 seconds (default: 60)
- *   ?showLayerNames=false - Hide layer name indicator (default: true)
- *   ?layer1=N&layer2=N    - Pin specific layers (0-326); pinned layers do not cycle
- *   ?debug=true           - Keep the layer indicator on screen permanently
- *
- * Native bridge (called from Swift via evaluateJavaScript):
- *   window.setShowLayerNames(bool)
- *   window.setCycleInterval(seconds)
- *   window.stopScreensaver()
- */
+import { SceneRenderer, crossfade, WIDTH, HEIGHT, configs } from './renderer/renderer.js'
+import { frameAt } from './renderer/state.js'
+import { ShuffleBag, normalizeSettings, eligibleScenes } from './selection.js'
+import reference from './data/reference.json'
 
-import Rom from 'earthbound-battle-backgrounds/src/rom/rom'
-import backgroundData from 'earthbound-battle-backgrounds/data/truncated_backgrounds.dat?uint8array&base64'
-import { renderLayers, SNES_WIDTH, SNES_HEIGHT } from 'earthbound-battle-backgrounds/src/engine'
-import BackgroundLayer from 'earthbound-battle-backgrounds/src/rom/background_layer'
-import { HORIZONTAL, HORIZONTAL_INTERLACED, VERTICAL } from 'earthbound-battle-backgrounds/src/rom/distortion_effect'
-import layerNames from './layerNames.json'
-
-const LAYER_COUNT = 327
-const DEFAULT_INTERVAL_SECONDS = 60
-const INDICATOR_DISPLAY_TIME = 5000  // 5 seconds
-
-const FPS = 30
-const FRAME_INTERVAL = 1000 / FPS
-const FRAME_SKIP = 1
-const LETTERBOX = 0    // pixels of black bar top and bottom; 0 fills the frame
-const TRANSITION_MS = 1200  // crossfade duration between backgrounds
-
-// Both layers render at half opacity so they sum to a full-brightness frame.
-// The engine's own animate() rewrites this array when a layer's entry index is
-// falsy - and index 0 is a perfectly valid background - which would leave one
-// layer stuck invisible for the rest of the session. Owning the loop avoids that.
-const LAYER_ALPHA = 0.5
-
-const EFFECT_NAMES = {
-  [HORIZONTAL]: 'Horizontal',
-  [HORIZONTAL_INTERLACED]: 'Interlaced',
-  [VERTICAL]: 'Vertical'
+function startScreensaver() {
+const params = new URLSearchParams(location.search)
+const preview = params.get('preview') === 'true'
+const valid = n => Number.isInteger(n) && n >= 0 && n < configs.length
+const pinnedPair = ['layer1','layer2'].every(k => params.has(k)) ? ['layer1','layer2'].map(k => Number(params.get(k))) : null
+const pinned = pinnedPair?.every(valid) ? pinnedPair : null
+let saved = {}
+try { saved = JSON.parse(localStorage.getItem('earthbound-settings') || '{}') } catch {}
+try { saved = {...saved, ...JSON.parse(params.get('settings') || '{}')} } catch {}
+for (const key of ['mode','scale','interval']) if (params.has(key)) saved[key] = params.get(key)
+if (params.has('showLayerNames')) saved.showLayerNames = params.get('showLayerNames') !== 'false'
+let settings = normalizeSettings(saved)
+const scenes = reference.scenes.filter(s => s.layers.every(valid))
+const bag = new ShuffleBag()
+const canvas = document.querySelector('canvas')
+canvas.width = WIDTH; canvas.height = HEIGHT
+const context = canvas.getContext('2d', {alpha: false})
+context.imageSmoothingEnabled = false
+const image = context.createImageData(WIDTH, HEIGHT)
+const outgoingBuffer = new Uint8ClampedArray(image.data.length)
+const incomingBuffer = new Uint8ClampedArray(image.data.length)
+let current, outgoing, startTime, outgoingStart, changeTime, frameId = null, running = false, manual = !!pinned, lastDraw = -Infinity
+let shownAt = 0
+const status = document.getElementById('status')
+function chooseScene() {
+  const available = eligibleScenes(scenes, settings)
+  if (settings.mode === 'authentic' || settings.favoritesOnly) {
+    const scene = bag.next(available)
+    status.textContent = !available.length ? 'All backgrounds are excluded. Restore one in the gallery to resume.' : settings.favoritesOnly && !available.some(s => settings.favorites.includes(s.id)) ? 'No available favorites yet; playing the collection.' : ''
+    return scene
+  }
+  const excluded = new Set(settings.excluded)
+  // A bounded attempt avoids hanging if a supplied exclusion list covers the pool.
+  for (let attempt = 0; attempt < 100; attempt++) {
+    const pair = [Math.floor(Math.random()*327), Math.floor(Math.random()*327)]
+    const id = pair.join(':')
+    if (id !== current?.id && !excluded.has(id)) return {id, layers:pair, name:`Remix ${pair[0]} × ${pair[1]}`}
+  }
+  return bag.next(available)
 }
-
-const ROM = new Rom(backgroundData)
-globalThis.ROM = ROM  // exposed for poking at the ROM from a browser console
-
-let layers = []
-const alpha = [LAYER_ALPHA, LAYER_ALPHA]
-let tick = 0
-
-// During a crossfade the outgoing pair is still rendered, so a frame holds four
-// layers. Scratch arrays, reused each frame rather than reallocated.
-let previousLayers = null
-let transitionStart = 0
-const fadeLayers = new Array(4)
-const fadeAlpha = new Array(4)
-
-let canvas = null
-let context = null
-let image = null
-
-let frameId = null
-let lastFrameTime = 0
-let cycleIntervalId = null
-let indicatorTimeoutId = null
-
-let intervalMs = DEFAULT_INTERVAL_SECONDS * 1000
-let showLayerNames = true
-let pinIndicator = false
-
-// MARK: - Native bridge
-
-window.setShowLayerNames = function (value) {
-  showLayerNames = value === true || value === 'true'
-  if (showLayerNames) {
-    showLayerIndicator()
-  } else {
-    hideLayerIndicator()
+function setScene(scene, now = performance.now(), fade = true) {
+  outgoing = fade && settings.mode === 'remix' ? current : null
+  outgoingStart = startTime
+  current = scene ? {...scene, renderer: new SceneRenderer(scene.layers, settings.mode)} : null
+  startTime = now; changeTime = now + settings.interval*1000; shownAt = now
+  document.getElementById('scene-name').textContent = scene?.name || ''
+  document.getElementById('scene-detail').textContent = scene ? `${settings.mode === 'authentic' ? 'Original pairing' : 'Remix'} · ${scene.layers.join(' + ')}` : ''
+}
+function fit() {
+  const viewport = document.getElementById('stage')
+  const w = viewport.clientWidth, h = viewport.clientHeight
+  if (settings.scale === 'fill') { canvas.style.width = '100%'; canvas.style.height = '100%'; return }
+  const ratio = settings.scale === '4:3' ? 4/3 : WIDTH/HEIGHT
+  let width = Math.min(w,h*ratio), height = width/ratio
+  if (settings.scale === 'pixels') {
+    const scale = Math.min(w/WIDTH,h/HEIGHT)
+    const integer = scale >= 1 ? Math.floor(scale) : scale
+    width = WIDTH*integer; height = HEIGHT*integer
+  }
+  canvas.style.width = `${width}px`; canvas.style.height = `${height}px`
+}
+function draw(now) {
+  if (!running) return
+  frameId = requestAnimationFrame(draw)
+  if (now-lastDraw < 1000/60-0.5) return
+  lastDraw = now
+  if (!manual && now >= changeTime) setScene(chooseScene(), now)
+  if (!current) { context.clearRect(0,0,WIDTH,HEIGHT); return }
+  const frame = params.has('frame') ? Math.max(0,Math.floor(Number(params.get('frame')) || 0)) : frameAt(now-startTime)
+  if (outgoing && now-startTime < 1200) {
+    outgoing.renderer.render(frameAt(now-outgoingStart),outgoingBuffer)
+    current.renderer.render(frame,incomingBuffer)
+    const p = (now-startTime)/1200
+    crossfade(outgoingBuffer,incomingBuffer,p*p*(3-2*p),image.data)
+  } else { outgoing = null; current.renderer.render(frame,image.data) }
+  context.putImageData(image,0,0)
+  document.getElementById('layer-indicator').classList.toggle('visible', settings.showLayerNames && (preview || params.get('debug') === 'true' || now-shownAt < 5000))
+}
+function applySettings(value, persist = true) {
+  const nextSettings = normalizeSettings({...settings,...value})
+  if (current !== undefined && JSON.stringify(nextSettings) === JSON.stringify(settings)) { syncControls(); return }
+  const galleryChanged = JSON.stringify([nextSettings.favorites,nextSettings.excluded]) !== JSON.stringify([settings.favorites,settings.excluded])
+  settings = nextSettings
+  bag.bag = []
+  fit()
+  if (pinned) setScene({id:pinned.join(':'),layers:pinned,name:`Pinned ${pinned.join(' + ')}`},performance.now(),false)
+  else { manual = false; setScene(chooseScene(),performance.now(),false) }
+  if (persist) {
+    try { localStorage.setItem('earthbound-settings',JSON.stringify(settings)) } catch {}
+    window.webkit?.messageHandlers?.settingsChanged?.postMessage(settings)
+  }
+  syncControls()
+  if (preview && galleryChanged) gallery()
+}
+window.setScreensaverSettings = value => applySettings(value,false)
+window.setShowLayerNames = value => applySettings({showLayerNames: value === true || value === 'true'},false)
+window.setCycleInterval = seconds => {
+  settings = normalizeSettings({...settings,interval:seconds}); changeTime = performance.now()+settings.interval*1000
+}
+window.stopScreensaver = () => { running = false; if (frameId !== null) cancelAnimationFrame(frameId); frameId = null; current = outgoing = null }
+// Stable API for raw reference captures and independent automated validation.
+window.earthbound = {
+  capture: (pair, frame, mode = 'authentic') => Array.from(new SceneRenderer(pair,mode).render(frame)),
+  scenes, configs,
+  getSettings: () => structuredClone(settings)
+}
+function syncControls() {
+  for (const key of ['mode','scale','interval','showLayerNames','favoritesOnly']) {
+    const control = document.getElementById(key)
+    if (control.type === 'checkbox') control.checked = settings[key]
+    else control.value = settings[key]
   }
 }
-
-window.setCycleInterval = function (seconds) {
-  const value = Number(seconds)
-  if (!Number.isFinite(value) || value <= 0) return
-  intervalMs = value * 1000
-  startCycleTimer()
-}
-
-window.stopScreensaver = function () {
-  stop()
-}
-
-// MARK: - Layer selection
-
-function randomLayer () {
-  return Math.floor(Math.random() * LAYER_COUNT)
-}
-
-function isValidLayer (index) {
-  return Number.isInteger(index) && index >= 0 && index < LAYER_COUNT
-}
-
-function getSpecificLayers (params) {
-  const layer1 = parseInt(params.get('layer1'), 10)
-  const layer2 = parseInt(params.get('layer2'), 10)
-  return isValidLayer(layer1) && isValidLayer(layer2) ? [layer1, layer2] : null
-}
-
-function getCycleInterval (params) {
-  const interval = parseInt(params.get('interval'), 10)
-  return (interval > 0 ? interval : DEFAULT_INTERVAL_SECONDS) * 1000
-}
-
-// MARK: - Layer indicator
-
-/**
- * Names come from layerNames.json when present. That table has to be compiled by
- * hand, so anything missing falls back to a description derived from the ROM
- * itself - the index plus the distortion style you can actually see on screen.
- */
-function describeLayer (layer) {
-  const named = layerNames[String(layer.entry)]
-  if (named) return named
-
-  const effect = EFFECT_NAMES[layer.distorter.effect.type]
-  const index = String(layer.entry).padStart(3, '0')
-  return effect ? `#${index} ${effect}` : `#${index}`
-}
-
-function hideLayerIndicator () {
-  const indicator = document.getElementById('layer-indicator')
-  if (indicator) indicator.classList.remove('visible')
-}
-
-function showLayerIndicator () {
-  if (!showLayerNames) return
-
-  const indicator = document.getElementById('layer-indicator')
-  const layer1El = document.getElementById('layer1-name')
-  const layer2El = document.getElementById('layer2-name')
-
-  if (!indicator || !layer1El || !layer2El || layers.length < 2) return
-
-  layer1El.textContent = describeLayer(layers[0])
-  layer2El.textContent = describeLayer(layers[1])
-
-  indicator.classList.add('visible')
-
-  clearTimeout(indicatorTimeoutId)
-  indicatorTimeoutId = null
-  if (pinIndicator) return
-
-  indicatorTimeoutId = setTimeout(() => {
-    indicator.classList.remove('visible')
-  }, INDICATOR_DISPLAY_TIME)
-}
-
-// MARK: - Cycling
-
-function setRandomLayers () {
-  // Hand the current pair to the crossfade before replacing it. If a fade is
-  // already running its outgoing pair is simply dropped, which is only reachable
-  // at intervals shorter than TRANSITION_MS.
-  previousLayers = layers
-  transitionStart = performance.now()
-  layers = [
-    new BackgroundLayer(randomLayer(), ROM),
-    new BackgroundLayer(randomLayer(), ROM)
-  ]
-  showLayerIndicator()
-}
-
-function startCycleTimer () {
-  clearInterval(cycleIntervalId)
-  cycleIntervalId = setInterval(setRandomLayers, intervalMs)
-}
-
-// MARK: - Render loop
-
-function drawFrame (now) {
-  frameId = requestAnimationFrame(drawFrame)
-
-  const elapsed = now - lastFrameTime
-  if (elapsed < FRAME_INTERVAL) return
-  // Carry the remainder forward so the frame clock doesn't drift.
-  lastFrameTime = now - (elapsed % FRAME_INTERVAL)
-
-  let active = layers
-  let activeAlpha = alpha
-
-  if (previousLayers) {
-    const p = (now - transitionStart) / TRANSITION_MS
-    if (p >= 1) {
-      previousLayers = null
-    } else {
-      // Smoothstep, so the fade eases in and out instead of starting abruptly.
-      const t = p * p * (3 - 2 * p)
-      fadeLayers[0] = previousLayers[0]
-      fadeLayers[1] = previousLayers[1]
-      fadeLayers[2] = layers[0]
-      fadeLayers[3] = layers[1]
-      // The four weights always sum to 1, so brightness holds steady across the
-      // fade - the layers blend additively, they don't composite.
-      fadeAlpha[0] = fadeAlpha[1] = LAYER_ALPHA * (1 - t)
-      fadeAlpha[2] = fadeAlpha[3] = LAYER_ALPHA * t
-      active = fadeLayers
-      activeAlpha = fadeAlpha
-    }
+function gallery() {
+  const list = document.getElementById('gallery')
+  const query = document.getElementById('search').value.toLowerCase()
+  list.replaceChildren()
+  for (const scene of scenes.filter(s => `${s.name} ${s.names.join(' ')} ${s.id}`.toLowerCase().includes(query))) {
+    const card = document.createElement('article')
+    const select = document.createElement('button'); select.className = 'scene'
+    const thumbnail = document.createElement('canvas'); thumbnail.width = WIDTH; thumbnail.height = HEIGHT
+    const name = document.createElement('span'); name.textContent = scene.name
+    select.append(thumbnail,name); select.title = `Play ${scene.name} (${scene.id})`
+    select.onclick = () => { manual = true; setScene(scene,performance.now(),false) }
+    const favorite = document.createElement('button'); favorite.textContent = settings.favorites.includes(scene.id) ? '★ Favorite' : '☆ Favorite'
+    favorite.setAttribute('aria-pressed',String(settings.favorites.includes(scene.id)))
+    favorite.onclick = () => { applySettings({favorites:settings.favorites.includes(scene.id) ? settings.favorites.filter(v=>v!==scene.id) : [...settings.favorites,scene.id]}) }
+    const exclude = document.createElement('button'); exclude.textContent = settings.excluded.includes(scene.id) ? 'Restore' : 'Exclude'
+    exclude.onclick = () => { applySettings({excluded:settings.excluded.includes(scene.id) ? settings.excluded.filter(v=>v!==scene.id) : [...settings.excluded,scene.id]}) }
+    card.append(select,favorite,exclude); list.append(card)
+    thumbnail.dataset.pair = JSON.stringify(scene.layers)
   }
-
-  const bitmap = renderLayers(active, image.data, LETTERBOX, tick, activeAlpha)
-  tick += FRAME_SKIP
-  // renderLayers writes into the buffer we hand it and hands the same array back;
-  // the copy only matters if a future engine version returns a different one.
-  if (bitmap !== image.data) image.data.set(bitmap)
-  context.putImageData(image, 0, 0)
+  thumbnailObserver.disconnect()
+  list.querySelectorAll('canvas').forEach(c=>thumbnailObserver.observe(c))
 }
-
-function start () {
-  canvas = document.querySelector('canvas')
-  if (!canvas) {
-    console.error('Screensaver: no canvas element')
-    return
+const thumbnailObserver = preview ? new IntersectionObserver(entries => {
+  for (const entry of entries) if (entry.isIntersecting) {
+    const c = entry.target, ctx = c.getContext('2d'), data = ctx.createImageData(WIDTH,HEIGHT)
+    data.data.set(new SceneRenderer(JSON.parse(c.dataset.pair)).render(0))
+    ctx.putImageData(data,0,0); thumbnailObserver.unobserve(c)
   }
-
-  // Setting width/height resets the 2D context, so configure the context after.
-  canvas.width = SNES_WIDTH
-  canvas.height = SNES_HEIGHT
-  context = canvas.getContext('2d')
-  context.imageSmoothingEnabled = false
-  image = context.getImageData(0, 0, SNES_WIDTH, SNES_HEIGHT)
-
-  const params = new URLSearchParams(window.location.search)
-  showLayerNames = params.get('showLayerNames') !== 'false'
-  pinIndicator = params.get('debug') === 'true'
-  intervalMs = getCycleInterval(params)
-
-  const pinned = getSpecificLayers(params)
-  const [layer1, layer2] = pinned ?? [randomLayer(), randomLayer()]
-  layers = [new BackgroundLayer(layer1, ROM), new BackgroundLayer(layer2, ROM)]
-
-  lastFrameTime = performance.now()
-  frameId = requestAnimationFrame(drawFrame)
-  showLayerIndicator()
-
-  if (pinned) {
-    console.log(`Screensaver: pinned to layers ${layer1} and ${layer2}, not cycling`)
-  } else {
-    console.log(`Screensaver: cycling every ${intervalMs / 1000}s`)
-    startCycleTimer()
-  }
+}) : null
+if (preview) {
+  document.body.classList.add('preview')
+  for (const key of ['mode','scale','interval','showLayerNames','favoritesOnly']) document.getElementById(key).onchange = e => { applySettings({[key]:e.target.type === 'checkbox' ? e.target.checked : e.target.value}) }
+  document.getElementById('search').oninput = gallery
+  document.getElementById('next').onclick = () => { manual = false; setScene(chooseScene()) }
+  gallery()
 }
+window.addEventListener('resize',fit)
+window.addEventListener('pagehide',window.stopScreensaver)
+applySettings(settings,false)
+running = true
+frameId = requestAnimationFrame(draw)
 
-function stop () {
-  if (frameId !== null) {
-    cancelAnimationFrame(frameId)
-    frameId = null
-  }
-  clearInterval(cycleIntervalId)
-  cycleIntervalId = null
-  clearTimeout(indicatorTimeoutId)
-  indicatorTimeoutId = null
-  layers = []
-  previousLayers = null
 }
-
-window.addEventListener('pagehide', stop)
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', start)
-} else {
-  start()
-}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startScreensaver, {once:true})
+else startScreensaver()

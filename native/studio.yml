@@ -1,0 +1,82 @@
+name: EarthboundStudio
+options:
+  deploymentTarget:
+    macOS: '14.0'
+settings:
+  base:
+    SWIFT_VERSION: '5.0'
+    CODE_SIGN_IDENTITY: '-'
+    CODE_SIGN_STYLE: Manual
+    ENABLE_HARDENED_RUNTIME: YES
+    ARCHS: 'arm64 x86_64'
+    ONLY_ACTIVE_ARCH: NO
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: '2.0'
+targets:
+  EarthboundStudio:
+    type: application
+    platform: macOS
+    sources:
+      - Preview
+      - path: EarthboundScreensaver
+        excludes: [Info.plist, Resources]
+      - path: EarthboundScreensaver/Resources
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sjmatta.earthbound-studio
+    info:
+      path: Preview/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleDisplayName: EarthBound Studio
+        NSPrincipalClass: NSApplication
+        NSHighResolutionCapable: true
+    dependencies:
+      - sdk: ScreenSaver.framework
+      - sdk: WebKit.framework
+      - target: EarthboundExtension
+        embed: true
+  EarthboundExtension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Extension
+        excludes: [Info.plist, '*.entitlements', REFERENCE-LICENSE]
+      - path: EarthboundScreensaver
+        excludes: [Info.plist, Resources]
+      - path: EarthboundScreensaver/Resources
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sjmatta.earthbound-studio.screensaver
+        SWIFT_OBJC_BRIDGING_HEADER: Extension/ScreenSaverPrivate.h
+        APPLICATION_EXTENSION_API_ONLY: YES
+    info:
+      path: Extension/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleDisplayName: EarthBound Backgrounds (Experimental)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.screensaver
+          NSExtensionPointVersion: '1.0'
+          NSExtensionPrincipalClass: EarthboundExtension
+        ScreenSaverViewControllerClass: EarthboundExtensionViewController
+        ScreenSaverConfigurationSheetViewControllerClass: EarthboundConfigurationViewController
+        SSEHasConfigureSheet: true
+        SSENeedsAnimationTimer: false
+    entitlements:
+      path: Extension/EarthboundExtension.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.temporary-exception.shared-preference.read-write:
+          - com.sjmatta.earthbound-screensaver
+        com.apple.security.temporary-exception.mach-lookup.global-name:
+          - com.apple.CARenderServer
+          - com.apple.CoreDisplay.master
+          - com.apple.ViewBridgeAuxiliary
+    dependencies:
+      - sdk: ScreenSaver.framework
+      - sdk: WebKit.framework

@@ -1,161 +1,44 @@
-# CLAUDE.md
+# Development guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Commands
 
-## Prerequisites
+Requires Node 24+ and Xcode. Task orchestrates builds. XcodeGen is only needed when changing `native/studio.yml`.
 
-- Node.js 24+ (see `.nvmrc`)
-- Xcode (for native `.saver` build via `xcodebuild`)
-- [Task](https://taskfile.dev) (`brew install go-task`)
-
-## Build Commands
-
-This project uses [Task](https://taskfile.dev) for build automation. Primary commands:
-
-```bash
-task install      # Build everything and install to ~/Library/Screen Savers
-task run          # Install and launch screensaver for testing
-task dev          # Start Vite dev server for browser testing
-task logs         # Stream live screensaver logs (run in separate terminal)
-task check        # Run diagnostics on installation
-task clean        # Remove all build artifacts
-task rebuild      # Clean + full rebuild + install
-task kill-processes  # Clear cached screensaver processes after rebuilding
+```sh
+npm test                    # deterministic state, renderer, and real bundle startup
+scripts/test-native.sh      # Swift delayed-exit coordinator tests
+task build                  # web + universal legacy .saver
+task build:studio           # shared preview app + experimental extension
+task preview                # build/open Studio, without changing system selection
+task install                # explicitly install legacy .saver
+task verify-web-assets      # classic file-URL script checks
+npm run capture -- 269 270 120 output/capture
 ```
 
-Individual build steps:
-```bash
-task setup              # Build web assets with Vite (npm ci + vite build + verify)
-task build              # Build native .saver bundle (runs setup if needed)
-task verify-web-assets  # Assert the built HTML still loads from a file:// URL
-```
+The npm engine dependency is pinned to a commit. Keep that pin and the lockfile; `npm ci` supplies reproducibility. Do not edit `node_modules` or the sibling engine checkout to change the shipped renderer.
 
-`task setup` uses `npm ci`, not `npm install`: the engine is a git dependency pinned to a
-commit in `package.json`, and only the lockfile makes a build reproducible. Bumping the
-engine is a deliberate step — `npm install <repo>#<sha> --save` — because Renovate cannot
-propose updates for a git dependency pinned to a raw commit.
+## Architecture and fidelity
 
-CI runs on GitHub Actions (`.github/workflows/ci.yml`) on push/PR to `main` — builds the native bundle and verifies the output structure.
+`src/renderer/state.js` contains the integer simulation; `renderer.js` supplies ROM decoding/indexed graphics and `SceneRenderer.render(frame, destination)`. Simulation is fixed at nominal 60 Hz. Rendering the same frame twice must not advance palettes, scrolling, or effects. Each new scene owns its own timeline. Read [docs/renderer.md](docs/renderer.md) before changing semantics: it links disassembly routines, timing conventions, and known limitations.
 
-## Architecture
+`src/data/reference.json` records 224 original pairings and names, scrolling and sine tables, and source hashes. Regenerate using `scripts/import-reference-data.py` against the intended ebsrc checkout; never invent pair names. The source constants are humanized identifiers, not a transcription of every in-game name.
 
-Two-layer system: JavaScript rendering wrapped in a native macOS screensaver bundle.
+Authentic uses original pairings and zero as absent; Remix can select raw layer zero and arbitrary pairs. Preserve that distinction. Authentic uses 5-bit color math and transparency. Remix crossfades completed images, not partially accumulated 8-bit layer contributions.
 
-**Web Layer** (`src/`):
-- `main.js` - Owns the render loop, randomly cycling through 327 layer combinations
-- Uses `earthbound-battle-backgrounds` npm package for rendering
-- Vite bundles everything into a single `screensaver.js` file (IIFE format)
+`src/main.js` owns the cancellable animation loop, scene selection, gallery, aspect handling, and bridge. Classic scripts may run from the HTML head, so initialization must wait for DOM readiness. URL options: `preview=true`, `mode=authentic|remix`, `scale=4:3|pixels|fill`, `interval`, `showLayerNames`, `layer1`/`layer2`, `frame`, and `debug`. Pins survive interval/settings updates.
 
-`main.js` deliberately does **not** call the engine's `Engine.animate()`. It drives
-`renderLayers()` itself, for two reasons:
-1. `animate()` offers no way to stop — it keeps a module-private `frameID` and there is
-   no cancel API, so the loop outlives any attempt to shut it down.
-2. `animate()` rewrites the layer alpha array when a layer's `entry` index is falsy.
-   Index 0 is a perfectly valid background, so a session that randomly drew layer 0
-   would get stuck rendering a single layer at full opacity for its entire lifetime.
+Native bridge: `setScreensaverSettings(object)`, `setCycleInterval(seconds)`, `setShowLayerNames(bool)`, `stopScreensaver()`. Preview choices post to `settingsChanged`; native persists them through `SettingsStore` and reapplies idempotently. The diagnostic `earthbound.capture(pair, frame, mode)` returns raw pixels without changing live state.
 
-Layer opacity is fixed at 0.5/0.5 in `main.js` and never mutated. Keep it that way.
+## Native lifecycle
 
-Backgrounds crossfade rather than cutting, so a frame mid-transition renders **four**
-layers — the outgoing pair plus the incoming pair. The engine blends layers additively
-(it does not composite), so the four weights are kept summing to 1; anything else makes
-the picture visibly dim or blow out partway through the fade.
+`BattleBackgroundView` is shared by the legacy saver, Studio, and extension. Start is idempotent, stop blanks the page, and unexpected WebKit process termination gets one retry. `DelayedHostExit` is a process-wide legacy coordinator: any display restart cancels every pending exit, and repeated stops supersede previous requests. Never call exit in the preview or extension.
 
-**Native Layer** (`native/EarthboundScreensaver/`):
-- `EarthboundScreensaverView.swift` - Main screensaver view, hosts WKWebView, passes settings as URL query params
-- `ConfigureSheetController.swift` - Settings UI (cycle interval, show layer names), communicates changes to JS via `webView.evaluateJavaScript`
-- Loads bundled HTML/JS via `loadFileURL(_:allowingReadAccessTo:)`
+The legacy occlusion selector takes a scalar BOOL. Do not replace the typed function call with `perform(_:with:)`, which passes an object. The extension is private API and stays experimental until host-level testing supports broader claims. Its source is `native/Extension`; XcodeGen source and committed project must agree.
 
-**Native ↔ Web bridge**: Native code passes `?interval=N&showLayerNames=bool` on initial
-load. Runtime updates go through functions `main.js` hangs off `window`:
-- `window.setShowLayerNames(bool)`
-- `window.setCycleInterval(seconds)`
-- `window.stopScreensaver()` — cancels the render loop and all timers
+## File-URL invariant
 
-`applySettings()` only calls these once the page has loaded (tracked by `isContentLoaded`,
-set in the `didFinish` navigation callback). Content loads in `startAnimation()`, so the
-configure sheet can be dismissed before there is any page to talk to; in that case the
-new values are picked up from the query string on the next load.
+Vite produces one classic IIFE script. Keep `type="module"` and `crossorigin` out of shipped HTML. The compatibility transform is build-only: Vite's HTTP dev server needs modules. Use `WKWebView.loadFileURL(_:allowingReadAccessTo:)` with the bundled resource directory. Do not add private WKPreferences file-access keys.
 
-**URL Parameters** (for dev/browser testing):
-- `interval` — seconds between background changes (default: 60)
-- `showLayerNames` — show/hide layer name indicator (default: true)
-- `layer1` / `layer2` — pin specific layer indices (0–326); pinned layers do not cycle
-- `debug` — keep the layer indicator on screen permanently
+## Evidence
 
-**Layer indicator text**: names come from `src/layerNames.json` when an index is listed
-there. That table has to be compiled by hand and is currently empty, so in practice every
-layer falls back to a description derived from the ROM — index plus distortion style, e.g.
-`#019 Interlaced`. Adding entries to `layerNames.json` overrides the fallback per index.
-
-**Build Output**: `dist/EarthboundScreensaver.saver` - self-contained macOS screensaver bundle
-
-## Critical: macOS Sonoma/Sequoia WKWebView Fix
-
-### The Problem
-macOS Sonoma (14.x) and Sequoia (15.x) introduced a breaking change for WKWebView in screensavers. The ScreenSaverEngine's view hierarchy causes WKWebView to think it's "occluded" (hidden), which **pauses all JavaScript execution and CSS animations**. This results in a blank/black screen even though the WebView loads successfully.
-
-### The Solution
-Disable window occlusion detection using the private API `_setWindowOcclusionDetectionEnabled:`:
-
-```swift
-let selector = NSSelectorFromString("_setWindowOcclusionDetectionEnabled:")
-if webView.responds(to: selector) {
-    webView.perform(selector, with: false)
-}
-```
-
-This fix was discovered in the [WebViewScreenSaver project](https://github.com/liquidx/webviewscreensaver/commit/827156642601ac6ce1fbe2b632e8d6d424bcbbd3).
-
-### Script Tags Must Not Use `type="module"` (file:// CORS Issue)
-WKWebView loaded via `loadFileURL` uses `file://` origins. ES module scripts (`<script type="module">`) enforce CORS, which silently fails on `file://` — JavaScript never executes and the screen is blank with no errors in logs. The Vite build config includes a `fileUrlCompatPlugin` that strips `type="module"` and `crossorigin` from the output HTML and uses `format: 'iife'` for the JS bundle.
-
-This is enforced rather than remembered: `task verify-web-assets` (run automatically by
-`task setup`, and again against the shipped bundle in CI) fails the build if the HTML
-regains `type="module"`/`crossorigin` or the JS stops being an IIFE.
-
-Note `fileUrlCompatPlugin` is `apply: 'build'`. The dev server serves over `http://` and
-genuinely needs the module script — stripping it there breaks `task dev` with
-"Cannot use import statement outside a module".
-
-### What Does NOT Work (macOS 15+)
-The following private WKPreferences APIs throw `NSUnknownKeyException` and will crash the screensaver:
-- `config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")`
-- `config.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")`
-
-These were removed or restricted in recent macOS versions. Do NOT use them.
-
-### What DOES Work
-Use `loadFileURL(_:allowingReadAccessTo:)` - this is the official public API for loading local files:
-```swift
-webView.loadFileURL(htmlURL, allowingReadAccessTo: bundleURL)
-```
-Pass the bundle's root URL to `allowingReadAccessTo:` to enable access to all resources within the bundle.
-
-## Debugging macOS Screensavers
-
-### Log Commands
-```bash
-task logs                # Stream live logs
-task logs-errors         # Show recent errors only
-log show --last 5m --predicate 'processImagePath contains "legacyScreenSaver"'
-```
-
-### Key Processes
-- `legacyScreenSaver` - Hosts third-party .saver bundles
-- `WallpaperAgent` - Manages screensaver/wallpaper lifecycle in Sequoia
-- `ScreenSaverEngine` - Main screensaver app
-
-### Screensaver Preferences Location
-```bash
-plutil -p ~/Library/Preferences/ByHost/com.apple.screensaver.*.plist
-```
-
-### macOS Sequoia Notes
-- Third-party screensavers appear in "Other" section (click "Show All" to see them)
-- WKWebView works but requires the occlusion detection fix above
-
-## References
-- [WebViewScreenSaver GitHub](https://github.com/liquidx/webviewscreensaver)
-- [WebViewScreenSaver Issue #77 - Sonoma black screen](https://github.com/liquidx/webviewscreensaver/issues/77)
-- [Apple Developer Forums - legacyScreenSaver with WKWebView](https://developer.apple.com/forums/thread/736716)
+Build/signature success does not prove activation, multi-monitor behavior, or game fidelity. No reference ROM/captures were available in the implementation session. State tests and implementation captures must never be labeled emulator-verified. See `docs/renderer.md` for validation scope and remaining SNES-specific effects.
